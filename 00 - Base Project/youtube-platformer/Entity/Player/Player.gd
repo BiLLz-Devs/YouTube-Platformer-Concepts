@@ -9,7 +9,7 @@ extends CharacterBody2D
 
 # Physics Variables
 const RunSpeed = 150
-const Acceleration = 50
+const Acceleration = 40
 const Gravity = 300
 const JumpVelocity = -150
 const MaxJumps = 2
@@ -61,7 +61,6 @@ func HorizontalMovement():
 
 func HandleJump():
 	if (keyJumpPressed):
-		print("Jumps: " +  str(jumps))
 		if (jumps < MaxJumps):
 			velocity.y = JumpVelocity
 			jumps += 1
