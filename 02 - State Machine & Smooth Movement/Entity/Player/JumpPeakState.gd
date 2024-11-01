@@ -1,9 +1,8 @@
-class_name JumpTransition extends PlayerState
+class_name JumpPeak extends PlayerState
 
 func EnterState():
 	# Set the state label
-	Player.currentStateDebug = "JumpTransition"
-	Player.ChangeState(States.Fall)
+	Name = "JumpPeak"
 
 
 func ExitState():
@@ -12,8 +11,8 @@ func ExitState():
 
 func Update(delta: float):	
 	# Handle State physics
-	# Player.velocity.y += Player.Gravity * delta
-	Player.HorizontalMovement()	
+	Player.HorizontalMovement()
+	Player.ChangeState(States.Fall)
 	HandleAnimations()
 
 

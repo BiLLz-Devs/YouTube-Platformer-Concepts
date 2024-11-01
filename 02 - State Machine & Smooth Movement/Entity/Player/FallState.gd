@@ -2,7 +2,7 @@ extends PlayerState
 
 func EnterState():
 	# Set the label
-	Player.currentStateDebug = "Fall"
+	Name = "Fall"
 
 
 func ExitState():

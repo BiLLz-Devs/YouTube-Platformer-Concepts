@@ -34,11 +34,9 @@ var keyJumpPressed = false
 # State Machine
 var currentState = null
 var previousState = null
-var currentStateDebug = "NULL"
 
 #endregion
 
-#endregion
 
 func _ready():
 	# Initialize the state machine
@@ -47,7 +45,6 @@ func _ready():
 		state.Player = self
 	previousState = States.Fall
 	currentState = States.Fall
-	print("Current State: " + str(currentState))
 
 
 func _draw():
@@ -82,7 +79,6 @@ func HandleFalling():
 func HandleJump():
 	# Handle jump
 	if ((keyJumpPressed) && (jumps < MaxJumps)):
-		jumpSpeed = JumpVelocity
 		ChangeState(States.Jump)
 
 
@@ -103,27 +99,15 @@ func GetInputStates():
 	if (keyRight): facing = 1
 	# Handle the sprite x-scale
 	Sprite.flip_h = (facing < 0)
-	
-	# Handle horizontal movements
-	if (is_on_floor()):
-		if (velocity.x != 0):
-			Animator.play("Run")
-		else:
-			Animator.play("Idle")
-	else:
-		if (velocity.y < 0):
-			Animator.play("Jump")
-		else:
-			Animator.play("Fall")
 
 
 func ChangeState(nextState):
 	if nextState != null:
 		previousState = currentState 
 		currentState = nextState
-		print("State Changed To: " + currentStateDebug)
 		previousState.ExitState()
 		currentState.EnterState()
+		#print("State Changed From: " + previousState.Name + " To: " + currentState.Name)
 
 
 func HandleFlipH():

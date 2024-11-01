@@ -2,7 +2,7 @@ class_name Jump extends PlayerState
 
 func EnterState():
 	# Set the state label
-	Player.currentStateDebug = "Jump"
+	Name = "Jump"
 	Player.velocity.y = Player.jumpSpeed
 
 
@@ -13,9 +13,8 @@ func ExitState():
 func Update(delta: float):	
 	# Handle State physics
 	Player.velocity.y += Player.Gravity * delta
-	Player.HandleJump()
-	HandleJumpToFall()
 	Player.HorizontalMovement()	
+	HandleJumpToFall()
 	HandleAnimations()
 
 
@@ -24,13 +23,9 @@ func HandleAnimations():
 	Player.HandleFlipH()
 
 
-func HandleJump():
-	# See if the jump key is held, if not, slash the momentum
-	if (!Player.keyJump):
-		Player.velocity.y *= Player.VariableJumpMultiplier
-		Player.ChangeState(States.JumpPeak)
-
-
 func HandleJumpToFall():
-	if (Player.velocity.y > 0):
+	if (Player.velocity.y >= 0):
+		Player.ChangeState(States.JumpPeak)
+	elif (!Player.keyJump): # See if the jump key is held, if not, slash the momentum
+		Player.velocity.y *= Player.VariableJumpMultiplier
 		Player.ChangeState(States.JumpPeak)

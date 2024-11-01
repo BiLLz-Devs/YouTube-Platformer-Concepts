@@ -2,7 +2,7 @@ extends PlayerState
 
 func EnterState():
 	# Set the label
-	Player.currentStateDebug = "Idle"
+	Name = "Idle"
 
 
 func ExitState():
@@ -14,8 +14,8 @@ func Update(delta: float):
 	Player.HandleJump()
 	Player.HorizontalMovement()
 	if (Player.moveDirectionX != 0):
-		print("INPUT")
-		Player.ChangeState(Player.States.Run)
+		Player.ChangeState(States.Run)
+	HandleAnimations()
 
 
 func HandleAnimations():
