@@ -11,6 +11,7 @@ extends CharacterBody2D
 # Physics Variables
 const RunSpeed = 150
 const Acceleration = 40
+const Deceleration = 50
 const Gravity = 300
 const JumpVelocity = -150
 const VariableJumpMultiplier = 0.5
@@ -18,7 +19,7 @@ const MaxJumps = 2
 
 var moveSpeed = RunSpeed
 var jumpSpeed = JumpVelocity
-var moveDirection = 0
+var moveDirectionX = 0
 var jumps = 0
 var facing = 1
 
@@ -46,6 +47,11 @@ func _ready():
 		state.Player = self
 	previousState = States.Fall
 	currentState = States.Fall
+	print("Current State: " + str(currentState))
+
+
+func _draw():
+	currentState.Draw()
 
 
 func _physics_process(delta: float) -> void:
@@ -59,16 +65,30 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 
-func HorizontalMovement():
-	moveDirection = Input.get_axis("Left", "Right")
-	velocity.x = move_toward(velocity.x, moveDirection * moveSpeed, Acceleration)
+func HorizontalMovement(acceleration: float = Acceleration, deceleration: float = Deceleration):
+	moveDirectionX = Input.get_axis("Left", "Right")
+	if (moveDirectionX != 0):
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Acceleration)
+	else:
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Deceleration)
+
+
+func HandleFalling():
+	# See if we walked off a ledge
+	if (!is_on_floor()):
+		ChangeState(States.Fall)
 
 
 func HandleJump():
-	if (keyJumpPressed):
-		if (jumps < MaxJumps):
-			velocity.y = JumpVelocity
-			jumps += 1
+	# Handle jump
+	if ((keyJumpPressed) && (jumps < MaxJumps)):
+		jumpSpeed = JumpVelocity
+		ChangeState(States.Jump)
+
+
+func HandleLanding():
+	if (is_on_floor()):
+		ChangeState(States.Idle)
 
 
 func GetInputStates():
@@ -81,9 +101,6 @@ func GetInputStates():
 	
 	if (keyLeft): facing = -1
 	if (keyRight): facing = 1
-
-
-func HandleAnimation():
 	# Handle the sprite x-scale
 	Sprite.flip_h = (facing < 0)
 	

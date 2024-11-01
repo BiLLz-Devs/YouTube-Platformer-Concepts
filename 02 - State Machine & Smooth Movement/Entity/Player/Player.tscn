@@ -1,10 +1,11 @@
-[gd_scene load_steps=16 format=3 uid="uid://ckng63detpg81"]
+[gd_scene load_steps=17 format=3 uid="uid://ckng63detpg81"]
 
 [ext_resource type="Texture2D" uid="uid://dhv21cnwh8y4b" path="res://Resources/Character base.png" id="1_e7d54"]
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/States.gd" id="3_pqwyk"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/LockedState.gd" id="4_jim0x"]
-[ext_resource type="Script" path="res://Entity/Player/GroundState.gd" id="5_knb1c"]
+[ext_resource type="Script" path="res://Entity/Player/IdleState.gd" id="5_ge4yc"]
+[ext_resource type="Script" path="res://Entity/Player/RunState.gd" id="5_knb1c"]
 [ext_resource type="Script" path="res://Entity/Player/JumpState.gd" id="6_kf4y8"]
 [ext_resource type="Script" path="res://Entity/Player/JumpPeakState.gd" id="7_clwxn"]
 [ext_resource type="Script" path="res://Entity/Player/FallState.gd" id="8_6y5yk"]
@@ -139,7 +140,10 @@ script = ExtResource("3_pqwyk")
 [node name="Locked" type="Node" parent="StateMachine"]
 script = ExtResource("4_jim0x")
 
-[node name="Ground" type="Node" parent="StateMachine"]
+[node name="Idle" type="Node" parent="StateMachine"]
+script = ExtResource("5_ge4yc")
+
+[node name="Run" type="Node" parent="StateMachine"]
 script = ExtResource("5_knb1c")
 
 [node name="Jump" type="Node" parent="StateMachine"]
