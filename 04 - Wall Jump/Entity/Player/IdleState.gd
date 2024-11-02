@@ -2,7 +2,7 @@ extends PlayerState
 
 func EnterState():
 	# Set the label
-	Name = "Fall"
+	Name = "Idle"
 
 
 func ExitState():
@@ -10,15 +10,14 @@ func ExitState():
 
 
 func Update(delta: float):
-	# Handle state physics
-	Player.HandleGravity(delta, Player.GravityFall)
-	Player.HorizontalMovement()
-	Player.HandleLanding()
+	Player.HandleFalling()
 	Player.HandleJump()
-	Player.HandleJumpBuffer()
+	Player.HorizontalMovement()
+	if (Player.moveDirectionX != 0):
+		Player.ChangeState(States.Run)
 	HandleAnimations()
 
 
 func HandleAnimations():
-	Player.Animator.play("Fall")
+	Player.Animator.play("Idle")
 	Player.HandleFlipH()

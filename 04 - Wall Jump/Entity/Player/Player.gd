@@ -9,14 +9,18 @@ extends CharacterBody2D
 @onready var States = $StateMachine
 @onready var CoyoteTimer = $Timers/CoyoteTime
 @onready var JumpBufferTimer = $Timers/JumpBuffer
+@onready var RCBottomLeft = $Raycasts/WallJump/BottomLeft
+@onready var RCBottomRight = $Raycasts/WallJump/BottomRight
 
 # Physics Variables
 const RunSpeed = 150
+const WallJumpSpeed = 150
 const Acceleration = 40
 const Deceleration = 50
 const GravityJump = 300
 const GravityFall = 350
-const JumpVelocity = -165
+const JumpVelocity = -170
+const WallJumpVelocity = -120
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 2
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
@@ -26,7 +30,7 @@ var moveSpeed = RunSpeed
 var jumpSpeed = JumpVelocity
 var moveDirectionX = 0
 var jumps = 0
-#var jumpBuffered = false
+var wallDirection: Vector2 = Vector2.ZERO
 var facing = 1
 
 # Input Variables
@@ -65,10 +69,8 @@ func _draw():
 func _physics_process(delta: float) -> void:
 	# Get input states
 	GetInputStates()
-	
 	# Update the current state
 	currentState.Update(delta)
-	print("JumpBufferTime: " + str(JumpBufferTimer.time_left))
 	# Commit movement
 	move_and_slide()
 
@@ -119,10 +121,25 @@ func HandleJump():
 				ChangeState(States.Jump)
 
 
+func HandleWallJump():
+	GetWallDirection()
+	if (keyJumpPressed and wallDirection.x != 0):
+		ChangeState(States.WallJump)
+
+
 func HandleLanding():
 	if (is_on_floor()):
 		#JumpBufferTimer.stop()
 		ChangeState(States.Idle)
+
+
+func GetWallDirection():
+	if (RCBottomLeft.is_colliding()):
+		wallDirection = Vector2.LEFT
+	elif (RCBottomRight.is_colliding()):
+		wallDirection = Vector2.RIGHT
+	else:
+		wallDirection = Vector2.ZERO
 
 
 func GetInputStates():
