@@ -82,9 +82,9 @@ func _physics_process(delta: float) -> void:
 func HorizontalMovement(acceleration: float = Acceleration, deceleration: float = Deceleration):
 	moveDirectionX = Input.get_axis("Left", "Right")
 	if (moveDirectionX != 0):
-		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Acceleration)
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, acceleration)
 	else:
-		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Deceleration)
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, deceleration)
 
 
 func HandleFalling():

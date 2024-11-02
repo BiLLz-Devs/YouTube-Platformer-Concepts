@@ -13,14 +13,14 @@ extends CharacterBody2D
 @onready var RCBottomRight = $Raycasts/WallJump/BottomRight
 
 # Physics Variables
-const RunSpeed = 150
-const WallJumpSpeed = 150
+const RunSpeed = 125
+const WallJumpSpeed = 125
 const Acceleration = 40
 const Deceleration = 50
 const GravityJump = 300
 const GravityFall = 350
 const JumpVelocity = -170
-const WallJumpVelocity = -120
+const WallJumpVelocity = -130
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 2
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
@@ -84,9 +84,9 @@ func _physics_process(delta: float) -> void:
 func HorizontalMovement(acceleration: float = Acceleration, deceleration: float = Deceleration):
 	moveDirectionX = Input.get_axis("Left", "Right")
 	if (moveDirectionX != 0):
-		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Acceleration)
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, acceleration)
 	else:
-		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, Deceleration)
+		velocity.x = move_toward(velocity.x, moveDirectionX * moveSpeed, deceleration)
 
 
 func HandleFalling():
@@ -162,11 +162,14 @@ func ChangeState(nextState):
 		currentState = nextState
 		previousState.ExitState()
 		currentState.EnterState()
-		#print("State Changed From: " + previousState.Name + " To: " + currentState.Name)
+		return
 
 
 func HandleFlipH():
-	Sprite.flip_h = (facing < 1)
+	if (currentState.Name == "WallJump"):
+		Sprite.flip_h = (wallDirection.x < 1)
+	else:
+		Sprite.flip_h = (facing < 1)
 
 
 #endregion

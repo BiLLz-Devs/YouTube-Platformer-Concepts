@@ -4,12 +4,12 @@
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/States.gd" id="3_pqwyk"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/LockedState.gd" id="4_jim0x"]
-[ext_resource type="Script" path="res://Entity/Player/IdleState.gd" id="5_ge4yc"]
-[ext_resource type="Script" path="res://Entity/Player/RunState.gd" id="5_knb1c"]
-[ext_resource type="Script" path="res://Entity/Player/JumpState.gd" id="6_kf4y8"]
-[ext_resource type="Script" path="res://Entity/Player/JumpPeakState.gd" id="7_clwxn"]
-[ext_resource type="Script" path="res://Entity/Player/FallState.gd" id="8_6y5yk"]
-[ext_resource type="Script" path="res://Entity/Player/WallJumpState.gd" id="9_2sppr"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/IdleState.gd" id="5_ge4yc"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/RunState.gd" id="5_knb1c"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/JumpState.gd" id="6_kf4y8"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/JumpPeakState.gd" id="7_clwxn"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/FallState.gd" id="8_6y5yk"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/WallJumpState.gd" id="9_2sppr"]
 
 [sub_resource type="Animation" id="Animation_5ksb1"]
 resource_name = "Fall"
