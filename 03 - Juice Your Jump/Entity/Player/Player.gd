@@ -16,6 +16,7 @@ const Acceleration = 40
 const Deceleration = 50
 const GravityJump = 300
 const GravityFall = 350
+const MaxFallVelocity = 300
 const JumpVelocity = -165
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 2
@@ -68,7 +69,7 @@ func _physics_process(delta: float) -> void:
 	
 	# Update the current state
 	currentState.Update(delta)
-	print("JumpBufferTime: " + str(JumpBufferTimer.time_left))
+	HandleMaxFallVelocity()
 	# Commit movement
 	move_and_slide()
 
@@ -93,6 +94,10 @@ func HandleFalling():
 		# Start the coyote timer
 		CoyoteTimer.start(CoyoteTime)
 		ChangeState(States.Fall)
+
+
+func HandleMaxFallVelocity():
+	if (velocity.y > MaxFallVelocity): velocity.y = MaxFallVelocity
 
 
 func HandleJumpBuffer():
