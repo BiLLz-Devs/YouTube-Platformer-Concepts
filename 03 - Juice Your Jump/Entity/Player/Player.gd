@@ -115,8 +115,8 @@ func HandleJump():
 				JumpBufferTimer.stop()
 				ChangeState(States.Jump)
 	else:
-		# Handle air jumps if MaxJumps > 1
-		if (jumps < MaxJumps and keyJumpPressed):
+		# Handle air jumps if MaxJumps > 1, first jump must be on the ground
+		if ((jumps < MaxJumps) and (jumps > 0) and keyJumpPressed):
 			jumps += 1
 			ChangeState(States.Jump)
 		

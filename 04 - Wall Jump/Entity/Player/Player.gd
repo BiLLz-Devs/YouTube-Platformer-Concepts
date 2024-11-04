@@ -24,12 +24,12 @@ const Acceleration = 40
 const Deceleration = 50
 const WallJumpDeceleration = 4
 const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
-const GravityJump = 300
-const GravityFall = 350
-const JumpVelocity = -170
-const WallJumpVelocity = -120
+const GravityJump = 600
+const GravityFall = 700
+const JumpVelocity = -240
+const WallJumpVelocity = -190
 const VariableJumpMultiplier = 0.5
-const MaxJumps = 2
+const MaxJumps = 1
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
 const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in seconds
 
@@ -86,6 +86,7 @@ func _physics_process(delta: float) -> void:
 	currentState.Update(delta)
 	# Commit movement
 	move_and_slide()
+	if (keyJumpPressed): print(str(jumps))
 
 
 #endregion
@@ -111,7 +112,7 @@ func HandleFalling():
 
 
 func HandleJumpBuffer():
-	if (keyJumpPressed):
+	if (keyJumpPressed and (CoyoteTimer.time_left <= 0)):
 		JumpBufferTimer.start(JumpBufferTime)
 
 
@@ -130,8 +131,8 @@ func HandleJump():
 				JumpBufferTimer.stop()
 				ChangeState(States.Jump)
 	else:
-		# Handle air jumps if MaxJumps > 1
-		if (jumps < MaxJumps and keyJumpPressed):
+		# Handle air jumps if MaxJumps > 1, first jump must be on the ground
+		if ((jumps < MaxJumps) and (jumps > 0) and keyJumpPressed):
 			jumps += 1
 			ChangeState(States.Jump)
 		
@@ -146,8 +147,6 @@ func HandleJump():
 func HandleWallJump():
 	GetWallDirection()
 	if ((keyJumpPressed or (JumpBufferTimer.time_left > 0)) and wallDirection.x != 0):
-		if (!keyLeft and !keyRight):
-			jumps += 1
 		ChangeState(States.WallJump)
 
 
@@ -188,7 +187,7 @@ func ChangeState(nextState):
 		previousState.ExitState()
 		currentState.EnterState()
 		#print("From: " + previousState.Name + " To: " + currentState.Name)
-		#return
+		return
 
 
 func HandleFlipH():
