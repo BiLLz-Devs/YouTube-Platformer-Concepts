@@ -2,37 +2,47 @@ extends CharacterBody2D
 
 #region Player Variables
 
+#region Nodes
 # Nodes
 @onready var Sprite = $Sprite
 @onready var Animator = $Animator
 @onready var Collider = $Collider
 @onready var States = $StateMachine
+
 @onready var CoyoteTimer = $Timers/CoyoteTime
 @onready var JumpBufferTimer = $Timers/JumpBuffer
+
 @onready var RCBottomLeft = $Raycasts/WallJump/BottomLeft
 @onready var RCBottomRight = $Raycasts/WallJump/BottomRight
+#endregion
 
-# Physics Variables
-const RunSpeed = 125
-const WallJumpSpeed = 125
+#region Physics Variables
+# Physics Constants
+const RunSpeed = 120
+const WallJumpHSpeed = 120
 const Acceleration = 40
 const Deceleration = 50
+const WallJumpDeceleration = 4
+const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
 const GravityJump = 300
 const GravityFall = 350
 const JumpVelocity = -170
-const WallJumpVelocity = -130
+const WallJumpVelocity = -120
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 2
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
 const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in seconds
 
+# Physics Variables
 var moveSpeed = RunSpeed
 var jumpSpeed = JumpVelocity
 var moveDirectionX = 0
 var jumps = 0
 var wallDirection: Vector2 = Vector2.ZERO
 var facing = 1
+#endregion
 
+#region Input
 # Input Variables
 var keyUp = false
 var keyDown = false
@@ -40,10 +50,13 @@ var keyLeft = false
 var keyRight = false
 var keyJump = false
 var keyJumpPressed = false
+#endregion
 
+#region State Machine
 # State Machine
 var currentState = null
 var previousState = null
+#endregion
 
 #endregion
 
@@ -109,27 +122,39 @@ func HandleGravity(delta, gravity: float = GravityJump):
 func HandleJump():
 	# Handle jump
 	if (is_on_floor()):
-		if ((keyJumpPressed) && (jumps < MaxJumps)):
-			ChangeState(States.Jump)
-		if (JumpBufferTimer.time_left > 0):
-			JumpBufferTimer.stop()
-			ChangeState(States.Jump)
+		if (jumps < MaxJumps):
+			if (keyJumpPressed):
+				jumps += 1
+				ChangeState(States.Jump)
+			if (JumpBufferTimer.time_left > 0):
+				JumpBufferTimer.stop()
+				ChangeState(States.Jump)
 	else:
+		# Handle air jumps if MaxJumps > 1
+		if (jumps < MaxJumps and keyJumpPressed):
+			jumps += 1
+			ChangeState(States.Jump)
+		
+		# Handle coyote time jumps
 		if (CoyoteTimer.time_left > 0):
-			if ((keyJumpPressed) && (jumps < MaxJumps)):
+			if ((keyJumpPressed) and (jumps < MaxJumps)):
 				CoyoteTimer.stop()
+				jumps += 1
 				ChangeState(States.Jump)
 
 
 func HandleWallJump():
 	GetWallDirection()
-	if (keyJumpPressed and wallDirection.x != 0):
+	if ((keyJumpPressed or (JumpBufferTimer.time_left > 0)) and wallDirection.x != 0):
+		if (!keyLeft and !keyRight):
+			jumps += 1
 		ChangeState(States.WallJump)
 
 
 func HandleLanding():
 	if (is_on_floor()):
 		#JumpBufferTimer.stop()
+		jumps = 0
 		ChangeState(States.Idle)
 
 
@@ -162,14 +187,12 @@ func ChangeState(nextState):
 		currentState = nextState
 		previousState.ExitState()
 		currentState.EnterState()
-		return
+		#print("From: " + previousState.Name + " To: " + currentState.Name)
+		#return
 
 
 func HandleFlipH():
-	if (currentState.Name == "WallJump"):
-		Sprite.flip_h = (wallDirection.x < 1)
-	else:
-		Sprite.flip_h = (facing < 1)
+	Sprite.flip_h = (facing < 1)
 
 
 #endregion

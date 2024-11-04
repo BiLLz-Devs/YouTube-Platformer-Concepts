@@ -107,15 +107,24 @@ func HandleGravity(delta, gravity: float = GravityJump):
 func HandleJump():
 	# Handle jump
 	if (is_on_floor()):
-		if ((keyJumpPressed) && (jumps < MaxJumps)):
-			ChangeState(States.Jump)
-		if (JumpBufferTimer.time_left > 0):
-			JumpBufferTimer.stop()
-			ChangeState(States.Jump)
+		if (jumps < MaxJumps):
+			if (keyJumpPressed):
+				jumps += 1
+				ChangeState(States.Jump)
+			if (JumpBufferTimer.time_left > 0):
+				JumpBufferTimer.stop()
+				ChangeState(States.Jump)
 	else:
+		# Handle air jumps if MaxJumps > 1
+		if (jumps < MaxJumps and keyJumpPressed):
+			jumps += 1
+			ChangeState(States.Jump)
+		
+		# Handle coyote time jumps
 		if (CoyoteTimer.time_left > 0):
-			if ((keyJumpPressed) && (jumps < MaxJumps)):
+			if ((keyJumpPressed) and (jumps < MaxJumps)):
 				CoyoteTimer.stop()
+				jumps += 1
 				ChangeState(States.Jump)
 
 
