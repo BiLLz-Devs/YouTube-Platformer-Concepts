@@ -108,10 +108,8 @@ func HandleJump():
 	# Handle jump
 	if (is_on_floor()):
 		if (jumps < MaxJumps):
-			if (keyJumpPressed):
+			if (keyJumpPressed or JumpBufferTimer.time_left > 0):
 				jumps += 1
-				ChangeState(States.Jump)
-			if (JumpBufferTimer.time_left > 0):
 				JumpBufferTimer.stop()
 				ChangeState(States.Jump)
 	else:
@@ -154,7 +152,7 @@ func ChangeState(nextState):
 		currentState = nextState
 		previousState.ExitState()
 		currentState.EnterState()
-		#print("State Changed From: " + previousState.Name + " To: " + currentState.Name)
+		return
 
 
 func HandleFlipH():
