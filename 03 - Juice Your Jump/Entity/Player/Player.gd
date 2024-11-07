@@ -130,7 +130,7 @@ func HandleJump():
 
 func HandleLanding():
 	if (is_on_floor()):
-		#JumpBufferTimer.stop()
+		jumps = 0
 		ChangeState(States.Idle)
 
 
