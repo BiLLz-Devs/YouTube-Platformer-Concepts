@@ -26,6 +26,7 @@ const WallJumpDeceleration = 4
 const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
 const GravityJump = 600
 const GravityFall = 700
+const MaxFallVelocity = 300
 const JumpVelocity = -240
 const WallJumpVelocity = -190
 const VariableJumpMultiplier = 0.5
@@ -84,6 +85,7 @@ func _physics_process(delta: float) -> void:
 	GetInputStates()
 	# Update the current state
 	currentState.Update(delta)
+	HandleMaxFallVelocity()
 	# Commit movement
 	move_and_slide()
 	if (keyJumpPressed): print(str(jumps))
@@ -109,6 +111,10 @@ func HandleFalling():
 		# Start the coyote timer
 		CoyoteTimer.start(CoyoteTime)
 		ChangeState(States.Fall)
+
+
+func HandleMaxFallVelocity():
+	if (velocity.y > MaxFallVelocity): velocity.y = MaxFallVelocity
 
 
 func HandleJumpBuffer():
