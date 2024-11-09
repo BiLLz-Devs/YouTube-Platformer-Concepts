@@ -19,7 +19,7 @@ const GravityFall = 350
 const MaxFallVelocity = 300
 const JumpVelocity = -165
 const VariableJumpMultiplier = 0.5
-const MaxJumps = 2
+const MaxJumps = 1
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
 const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in seconds
 

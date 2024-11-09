@@ -4,11 +4,11 @@
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/States.gd" id="3_pqwyk"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/LockedState.gd" id="4_jim0x"]
-[ext_resource type="Script" path="res://Entity/Player/IdleState.gd" id="5_ge4yc"]
-[ext_resource type="Script" path="res://Entity/Player/RunState.gd" id="5_knb1c"]
-[ext_resource type="Script" path="res://Entity/Player/JumpState.gd" id="6_kf4y8"]
-[ext_resource type="Script" path="res://Entity/Player/JumpPeakState.gd" id="7_clwxn"]
-[ext_resource type="Script" path="res://Entity/Player/FallState.gd" id="8_6y5yk"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/IdleState.gd" id="5_qbr2a"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/RunState.gd" id="6_7tyg0"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/JumpState.gd" id="7_r1eat"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/JumpPeakState.gd" id="8_gsg8e"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/FallState.gd" id="9_atcla"]
 
 [sub_resource type="Animation" id="Animation_5ksb1"]
 resource_name = "Fall"
@@ -20,15 +20,15 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.25),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [20]
+"values": [32, 33]
 }
 
 [sub_resource type="Animation" id="Animation_vog66"]
 resource_name = "Idle"
-length = 1.2
+length = 0.7
 loop_mode = 1
 step = 0.025
 tracks/0/type = "value"
@@ -38,10 +38,10 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5]
+"values": [8, 9, 10, 11, 12, 13, 14]
 }
 
 [sub_resource type="Animation" id="Animation_3p2k2"]
@@ -55,10 +55,10 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [19]
+"values": [24, 25]
 }
 
 [sub_resource type="Animation" id="Animation_ypk8g"]
@@ -78,7 +78,7 @@ tracks/0/keys = {
 
 [sub_resource type="Animation" id="Animation_gffua"]
 resource_name = "Run"
-length = 0.6
+length = 0.8
 loop_mode = 1
 step = 0.025
 tracks/0/type = "value"
@@ -88,10 +88,10 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [6, 7, 8, 9, 10, 11]
+"values": [16, 17, 18, 19, 20, 21, 22, 23]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7w2do"]
@@ -104,15 +104,15 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7phbn"]
-size = Vector2(9, 17)
+size = Vector2(8, 20)
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_gqhxu")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_e7d54")
-hframes = 6
-vframes = 7
+hframes = 8
+vframes = 10
 
 [node name="Animator" type="AnimationPlayer" parent="."]
 libraries = {
@@ -120,7 +120,7 @@ libraries = {
 }
 
 [node name="Collider" type="CollisionShape2D" parent="."]
-position = Vector2(0.5, 7.5)
+position = Vector2(0, 6)
 shape = SubResource("RectangleShape2D_7phbn")
 
 [node name="Camera" type="Camera2D" parent="."]
@@ -141,19 +141,19 @@ script = ExtResource("3_pqwyk")
 script = ExtResource("4_jim0x")
 
 [node name="Idle" type="Node" parent="StateMachine"]
-script = ExtResource("5_ge4yc")
+script = ExtResource("5_qbr2a")
 
 [node name="Run" type="Node" parent="StateMachine"]
-script = ExtResource("5_knb1c")
+script = ExtResource("6_7tyg0")
 
 [node name="Jump" type="Node" parent="StateMachine"]
-script = ExtResource("6_kf4y8")
+script = ExtResource("7_r1eat")
 
 [node name="JumpPeak" type="Node" parent="StateMachine"]
-script = ExtResource("7_clwxn")
+script = ExtResource("8_gsg8e")
 
 [node name="Fall" type="Node" parent="StateMachine"]
-script = ExtResource("8_6y5yk")
+script = ExtResource("9_atcla")
 
 [node name="Timers" type="Node" parent="."]
 
