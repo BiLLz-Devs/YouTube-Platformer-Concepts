@@ -8,11 +8,11 @@ extends CharacterBody2D
 @onready var Collider = $Collider
 
 # Physics Variables
-const RunSpeed = 150
+const RunSpeed = 120
 const Acceleration = 40
-const Gravity = 300
-const JumpVelocity = -150
-const MaxJumps = 2
+const Gravity = 600
+const JumpVelocity = -240
+const MaxJumps = 1
 
 var moveSpeed = RunSpeed
 var moveDirection = 0

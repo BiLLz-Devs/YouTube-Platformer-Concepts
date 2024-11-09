@@ -9,13 +9,13 @@ extends CharacterBody2D
 @onready var States = $StateMachine
 
 # Physics Variables
-const RunSpeed = 150
+const RunSpeed = 120
 const Acceleration = 40
 const Deceleration = 50
-const Gravity = 300
-const JumpVelocity = -150
+const Gravity = 600
+const JumpVelocity = -240
 const VariableJumpMultiplier = 0.5
-const MaxJumps = 2
+const MaxJumps = 1
 
 var moveSpeed = RunSpeed
 var jumpSpeed = JumpVelocity

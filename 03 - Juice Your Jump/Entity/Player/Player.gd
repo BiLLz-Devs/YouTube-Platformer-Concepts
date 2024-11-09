@@ -11,13 +11,13 @@ extends CharacterBody2D
 @onready var JumpBufferTimer = $Timers/JumpBuffer
 
 # Physics Variables
-const RunSpeed = 150
+const RunSpeed = 120
 const Acceleration = 40
 const Deceleration = 50
-const GravityJump = 300
-const GravityFall = 350
-const MaxFallVelocity = 300
-const JumpVelocity = -165
+const GravityJump = 600
+const GravityFall = 700
+const MaxFallVelocity = 700
+const JumpVelocity = -240
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 1
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds

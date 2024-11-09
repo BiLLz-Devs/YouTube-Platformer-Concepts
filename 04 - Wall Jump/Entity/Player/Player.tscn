@@ -191,5 +191,5 @@ position = Vector2(-4, 12)
 target_position = Vector2(-3, 0)
 
 [node name="BottomRight" type="RayCast2D" parent="Raycasts/WallJump"]
-position = Vector2(5.01, 12)
+position = Vector2(4, 12)
 target_position = Vector2(3, 0)
