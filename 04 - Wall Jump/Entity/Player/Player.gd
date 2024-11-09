@@ -20,9 +20,12 @@ extends CharacterBody2D
 # Physics Constants
 const RunSpeed = 120
 const WallJumpHSpeed = 120
-const Acceleration = 40
-const Deceleration = 50
-const WallJumpDeceleration = 4
+const GroundAcceleration = 20
+const GroundDeceleration = 25
+const AirAcceleration = 15
+const AirDeceleration = 20
+const WallKickAcceleration = 4
+const WallJumpAcceleration = 5
 const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
 const GravityJump = 600
 const GravityFall = 700
@@ -36,6 +39,8 @@ const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in second
 
 # Physics Variables
 var moveSpeed = RunSpeed
+var Acceleration = GroundAcceleration
+var Deceleration = GroundDeceleration
 var jumpSpeed = JumpVelocity
 var moveDirectionX = 0
 var jumps = 0
@@ -88,7 +93,6 @@ func _physics_process(delta: float) -> void:
 	HandleMaxFallVelocity()
 	# Commit movement
 	move_and_slide()
-	if (keyJumpPressed): print(str(jumps))
 
 
 #endregion

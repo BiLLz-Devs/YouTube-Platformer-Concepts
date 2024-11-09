@@ -12,7 +12,7 @@ func ExitState():
 func Update(delta: float):
 	# Handle state physics
 	Player.HandleGravity(delta, Player.GravityFall)
-	Player.HorizontalMovement()
+	Player.HorizontalMovement(Player.AirAcceleration, Player.AirDeceleration)
 	Player.HandleLanding()
 	Player.HandleJump()
 	Player.HandleJumpBuffer()
