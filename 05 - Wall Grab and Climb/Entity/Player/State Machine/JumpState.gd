@@ -15,6 +15,8 @@ func Update(delta: float):
 	Player.HandleGravity(delta)
 	Player.HorizontalMovement()
 	Player.HandleWallJump()
+	Player.GetCanWallClimb()
+	Player.HandleWallGrab()
 	HandleJumpToFall()
 	HandleAnimations()
 
@@ -26,7 +28,7 @@ func HandleAnimations():
 
 func HandleJumpToFall():
 	if (Player.velocity.y >= 0):
-		Player.ChangeState(States.JumpPeak)
+		Player.ChangeState(States.Fall)
 	elif (!Player.keyJump): # See if the jump key is held, if not, slash the momentum
 		Player.velocity.y *= Player.VariableJumpMultiplier
-		Player.ChangeState(States.JumpPeak)
+		Player.ChangeState(States.Fall)

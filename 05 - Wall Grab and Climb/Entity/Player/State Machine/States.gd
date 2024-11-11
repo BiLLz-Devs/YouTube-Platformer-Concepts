@@ -7,6 +7,9 @@ extends Node
 @onready var JumpPeak = $JumpPeak
 @onready var WallJump = $WallJump
 @onready var Fall = $Fall
+@onready var WallGrab = $WallGrab
+@onready var WallClimb = $WallClimb
+@onready var WallSlide = $WallSlide
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

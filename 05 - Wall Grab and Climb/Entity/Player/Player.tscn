@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://ckng63detpg81"]
+[gd_scene load_steps=26 format=3 uid="uid://ckng63detpg81"]
 
 [ext_resource type="Texture2D" uid="uid://dhv21cnwh8y4b" path="res://Resources/Character base.png" id="1_e7d54"]
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
@@ -12,6 +12,7 @@
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallJumpState.gd" id="9_2sppr"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallGrabState.gd" id="11_2klq3"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallClimbState.gd" id="12_bexp8"]
+[ext_resource type="Script" path="res://Entity/Player/State Machine/WallSlideState.gd" id="13_uqlse"]
 
 [sub_resource type="Animation" id="Animation_5ksb1"]
 resource_name = "Fall"
@@ -97,6 +98,42 @@ tracks/0/keys = {
 "values": [16, 17, 18, 19, 20, 21, 22, 23]
 }
 
+[sub_resource type="Animation" id="Animation_0lcow"]
+resource_name = "WallClimb"
+length = 0.8
+loop_mode = 1
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [72, 73, 74, 75]
+}
+
+[sub_resource type="Animation" id="Animation_vowbq"]
+resource_name = "WallGrab"
+length = 0.9
+loop_mode = 1
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.45),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [64, 65]
+}
+
 [sub_resource type="Animation" id="Animation_hjl6o"]
 resource_name = "WallJump"
 step = 0.025
@@ -129,9 +166,8 @@ tracks/0/keys = {
 "values": [56, 57, 58]
 }
 
-[sub_resource type="Animation" id="Animation_vowbq"]
-resource_name = "WallGrab"
-length = 0.9
+[sub_resource type="Animation" id="Animation_0e8rv"]
+resource_name = "WallSlide"
 loop_mode = 1
 step = 0.025
 tracks/0/type = "value"
@@ -141,28 +177,10 @@ tracks/0/path = NodePath("Sprite:frame")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.45),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [64, 65]
-}
-
-[sub_resource type="Animation" id="Animation_0lcow"]
-resource_name = "WallClimb"
-length = 1.2
-loop_mode = 1
-step = 0.025
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.3, 0.6, 0.9),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [72, 73, 74, 75]
+"values": [80]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7w2do"]
@@ -175,7 +193,8 @@ _data = {
 "WallClimb": SubResource("Animation_0lcow"),
 "WallGrab": SubResource("Animation_vowbq"),
 "WallJump": SubResource("Animation_hjl6o"),
-"WallKick": SubResource("Animation_bptbt")
+"WallKick": SubResource("Animation_bptbt"),
+"WallSlide": SubResource("Animation_0e8rv")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7phbn"]
@@ -187,7 +206,7 @@ script = ExtResource("1_gqhxu")
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_e7d54")
 hframes = 8
-vframes = 10
+vframes = 11
 
 [node name="Animator" type="AnimationPlayer" parent="."]
 libraries = {
@@ -239,6 +258,9 @@ script = ExtResource("11_2klq3")
 [node name="WallClimb" type="Node" parent="StateMachine"]
 script = ExtResource("12_bexp8")
 
+[node name="WallSlide" type="Node" parent="StateMachine"]
+script = ExtResource("13_uqlse")
+
 [node name="Timers" type="Node" parent="."]
 
 [node name="CoyoteTime" type="Timer" parent="Timers"]
@@ -256,3 +278,29 @@ target_position = Vector2(-4, 0)
 [node name="BottomRight" type="RayCast2D" parent="Raycasts/WallJump"]
 position = Vector2(3, 12)
 target_position = Vector2(4, 0)
+
+[node name="WallClimb" type="Node2D" parent="Raycasts"]
+
+[node name="TopLeft" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(-3, -3)
+target_position = Vector2(-4, 0)
+
+[node name="TopRight" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(3, -3)
+target_position = Vector2(4, 0)
+
+[node name="UpperRight" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(3, -4)
+target_position = Vector2(4, 0)
+
+[node name="UpperLeft" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(-3, -4)
+target_position = Vector2(-4, 0)
+
+[node name="LowerRight" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(3, 13)
+target_position = Vector2(4, 0)
+
+[node name="LowerLeft" type="RayCast2D" parent="Raycasts/WallClimb"]
+position = Vector2(-3, 13)
+target_position = Vector2(-4, 0)
