@@ -1,17 +1,5 @@
 extends PlayerState
 
-'''
-Wall jumping will have a few cases
-1) basic wall jump where hitting peak of jump gives back control (y-value can be modified)
-	- also includes cancelling upon hitting a wall
-	- also includes jump buffering
-	- allows wall jumping by just hitting jump key against a wall
-2) just jumping kicks you slightly off the wall and then continue vertically (Celeste)
-	- if there is any movement input, then jump like #1
-	- cancels upon hitting a wall
-	- jump buffering
-'''
-
 var lastWallDirection
 var shouoldEnableWallKick
 
@@ -37,10 +25,11 @@ func Update(delta: float):
 
 
 func HandleAnimations():
-	Player.Animator.play("WallJump")
 	if ((!Player.keyLeft and !Player.keyRight) and shouoldEnableWallKick):
-		Player.Sprite.flip_h = (Player.velocity.x < 1)
+		Player.Animator.play("WallKick")
+		Player.Sprite.flip_h = (Player.velocity.x > 1)
 	else:
+		Player.Animator.play("WallJump")
 		Player.Sprite.flip_h = (Player.velocity.x < 1)
 
 
@@ -81,7 +70,7 @@ func HandleWallKickMovement():
 			Player.HorizontalMovement(Player.WallJumpAcceleration, Player.WallJumpAcceleration)
 		elif ((lastWallDirection == Vector2.RIGHT and Player.keyLeft)):
 			Player.HorizontalMovement(Player.WallJumpAcceleration, Player.WallJumpAcceleration)
-		elif ((lastWallDirection == Vector2.LEFT and Player.keyLeft)):
-			pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)
-		elif ((lastWallDirection == Vector2.RIGHT and Player.keyRight)):
-			pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)
+		#elif ((lastWallDirection == Vector2.LEFT and Player.keyLeft)):
+			#pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)
+		#elif ((lastWallDirection == Vector2.RIGHT and Player.keyRight)):
+			#pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)

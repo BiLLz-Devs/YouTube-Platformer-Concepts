@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3 uid="uid://ckng63detpg81"]
+[gd_scene load_steps=20 format=3 uid="uid://ckng63detpg81"]
 
 [ext_resource type="Texture2D" uid="uid://dhv21cnwh8y4b" path="res://Resources/Character base.png" id="1_e7d54"]
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
@@ -111,6 +111,22 @@ tracks/0/keys = {
 "values": [48, 49, 50]
 }
 
+[sub_resource type="Animation" id="Animation_bptbt"]
+resource_name = "WallKick"
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [56, 57, 58]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7w2do"]
 _data = {
 "Fall": SubResource("Animation_5ksb1"),
@@ -118,7 +134,8 @@ _data = {
 "Jump": SubResource("Animation_3p2k2"),
 "RESET": SubResource("Animation_ypk8g"),
 "Run": SubResource("Animation_gffua"),
-"WallJump": SubResource("Animation_hjl6o")
+"WallJump": SubResource("Animation_hjl6o"),
+"WallKick": SubResource("Animation_bptbt")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7phbn"]
@@ -187,9 +204,9 @@ script = ExtResource("8_6y5yk")
 [node name="WallJump" type="Node2D" parent="Raycasts"]
 
 [node name="BottomLeft" type="RayCast2D" parent="Raycasts/WallJump"]
-position = Vector2(-4, 12)
-target_position = Vector2(-3, 0)
+position = Vector2(-3, 12)
+target_position = Vector2(-4, 0)
 
 [node name="BottomRight" type="RayCast2D" parent="Raycasts/WallJump"]
-position = Vector2(4, 12)
-target_position = Vector2(3, 0)
+position = Vector2(3, 12)
+target_position = Vector2(4, 0)
