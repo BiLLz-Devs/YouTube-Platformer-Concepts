@@ -19,6 +19,7 @@ func Update(delta):
 	HandleClimbMovement()
 	Player.HandleWallRelease()
 	Player.HandleWallJump()
+	Player.HandleDash()
 	HandleAnimations()
 
 

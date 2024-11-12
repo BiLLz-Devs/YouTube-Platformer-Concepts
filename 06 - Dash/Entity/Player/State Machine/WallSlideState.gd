@@ -24,6 +24,7 @@ func Update(delta):
 	Player.HandleLanding()
 	Player.HandleWallJump()
 	HandleWallSlideMovement()
+	#Player.HandleDash()
 	HandleAnimations()
 
 
