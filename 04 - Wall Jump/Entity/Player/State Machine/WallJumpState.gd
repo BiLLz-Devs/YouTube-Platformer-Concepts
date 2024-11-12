@@ -3,6 +3,7 @@ extends PlayerState
 var lastWallDirection
 var shouoldEnableWallKick
 
+
 func EnterState():
 	# Set the label
 	Name = "WallJump"
