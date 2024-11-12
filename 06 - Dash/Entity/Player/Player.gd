@@ -11,6 +11,7 @@ extends CharacterBody2D
 
 @onready var CoyoteTimer = $Timers/CoyoteTime
 @onready var JumpBufferTimer = $Timers/JumpBuffer
+@onready var DashTimer = $Timers/DashTimer
 
 @onready var RCBottomLeft = $Raycasts/WallJump/BottomLeft
 @onready var RCBottomRight = $Raycasts/WallJump/BottomRight
@@ -20,6 +21,8 @@ extends CharacterBody2D
 @onready var RCUpperRight = $Raycasts/WallClimb/UpperRight
 @onready var RCLowerLeft = $Raycasts/WallClimb/LowerLeft
 @onready var RCLowerRight = $Raycasts/WallClimb/LowerRight
+
+@onready var DashParticles = $GraphcisEffects/Dash/DashTrail
 
 #endregion
 
@@ -32,33 +35,45 @@ const GroundDeceleration = 25
 const AirAcceleration = 15
 const AirDeceleration = 20
 const WallKickAcceleration = 4
-const WallJumpAcceleration = 5
-const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
 const GravityJump = 600
 const GravityFall = 700
 const MaxFallVelocity = 300
+
 const JumpVelocity = -240
 const WallJumpVelocity = -190
+const WallJumpAcceleration = 5
+const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 1
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
 const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in seconds
+
 const ClimbSpeed = 30
 const MaxClimbStamina = 300 #stamina measured by frames and not with a timer as certain activites use stamina at different rate
 const GrabStaminaCost = 1
 const ClimbStaminaCost = 2
 const WallSlideSpeed = 40
 
+const MaxDashes = 1
+const DashSpeed = 300
+const DashDeceleration = 4
+const DashTime = 0.15
+
 # Physics Variables
 var moveSpeed = RunSpeed
 var Acceleration = GroundAcceleration
 var Deceleration = GroundDeceleration
-var jumpSpeed = JumpVelocity
 var moveDirectionX = 0
+
+var jumpSpeed = JumpVelocity
 var jumps = 0
+
 var wallDirection: Vector2 = Vector2.ZERO
 var wallClimbDirection: Vector2 = Vector2.ZERO
 var climbStamina = MaxClimbStamina
+
+var dashes = 0
+var dashDirection: Vector2
 var facing = 1
 
 #endregion
@@ -72,6 +87,8 @@ var keyRight = false
 var keyJump = false
 var keyJumpPressed = false
 var keyClimb = false
+var keyDash = false
+
 #endregion
 
 #region State Machine
@@ -179,6 +196,7 @@ func HandleWallJump():
 func HandleLanding():
 	if (is_on_floor()):
 		jumps = 0
+		dashes = 0
 		climbStamina = MaxClimbStamina
 		ChangeState(States.Idle)
 
@@ -201,6 +219,22 @@ func HandleWallSlide():
 		or ((wallDirection == Vector2.RIGHT and keyRight) and (RCUpperRight.is_colliding() and RCLowerRight.is_colliding()))):
 		if (!keyJump):
 			ChangeState(States.WallSlide)
+
+
+func HandleDash():
+	if (dashes < MaxDashes):
+		if (keyDash):
+			dashes += 1
+			ChangeState(States.Dash)
+
+
+func GetDashDirection() -> Vector2:
+	var _dir = Vector2.ZERO
+	if (!keyLeft and !keyRight and !keyUp and !keyDown):
+		_dir = Vector2(facing, 0)
+	else:
+		_dir -= Vector2(Input.get_axis("Right", "Left"), Input.get_axis("Down", "Up"))
+	return _dir
 
 #endregion
 
@@ -233,6 +267,7 @@ func GetInputStates():
 	keyJump = Input.is_action_pressed("Jump")
 	keyJumpPressed = Input.is_action_just_pressed("Jump")
 	keyClimb = Input.is_action_pressed("Climb")
+	keyDash = Input.is_action_just_pressed("Dash")
 	
 	if (keyLeft): facing = -1
 	if (keyRight): facing = 1
@@ -246,7 +281,7 @@ func ChangeState(nextState):
 		currentState = nextState
 		previousState.ExitState()
 		currentState.EnterState()
-		print("From: " + previousState.Name + " To: " + currentState.Name)
+		#print("From: " + previousState.Name + " To: " + currentState.Name)
 		return
 
 #endregion
