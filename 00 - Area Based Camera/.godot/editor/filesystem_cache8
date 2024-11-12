@@ -1,0 +1,58 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1731185300
+CONTRIBUTING.md::TextFile::-1::1730757603::0::1::::<><>::
+README.md::TextFile::-1::1730757603::0::1::::<><>::
+READMECN.md::TextFile::-1::1730757603::0::1::::<><>::
+::res://addons/::1731183797
+::res://addons/Todo_Manager/::1731185665
+ColourPicker.gd::GDScript::-1::1730757604::0::1::::<>HBoxContainer<>::
+Current.gd::GDScript::-1::1730757604::0::1::::<>Panel<>::
+Dock.gd::GDScript::-1::1730757604::0::1::::<>Control<>::
+Pattern.gd::GDScript::-1::1730757604::0::1::::<>HBoxContainer<>::
+plugin.cfg::TextFile::-1::1730757604::0::1::::<><>::
+plugin.gd::GDScript::-1::1730757604::0::1::::<>EditorPlugin<>::
+Project.gd::GDScript::-1::1730757604::0::1::::<>Panel<>::
+todo.cfg::TextFile::-1::1731185665::0::1::::<><>::
+todoItem_class.gd::GDScript::-1::1730757604::0::1::::<>RefCounted<>::
+todo_class.gd::GDScript::-1::1730757604::0::1::::<>RefCounted<>::
+::res://addons/Todo_Manager/doc/::1731183797
+example.gd::GDScript::-1::1730757604::0::1::::<>Node<>::
+::res://addons/Todo_Manager/doc/images/::1731183797
+example1.png::CompressedTexture2D::8063086250666186557::1730757604::1730757611::1::::<><>::
+example2.png::CompressedTexture2D::7648105833163622916::1730757604::1730757611::1::::<><>::
+Instruct1.png::CompressedTexture2D::5587243362873554608::1730757604::1730757611::1::::<><>::
+Instruct2.png::CompressedTexture2D::9177736623070473985::1730757604::1730757611::1::::<><>::
+Instruct3.png::CompressedTexture2D::1338001064582977463::1730757604::1730757611::1::::<><>::
+Instruct4.png::CompressedTexture2D::1861717417394411103::1730757604::1730757611::1::::<><>::
+Instruct5.png::CompressedTexture2D::5378780881097089576::1730757604::1730757611::1::::<><>::
+TODO_Manager_Logo.png::CompressedTexture2D::673003557812921732::1730757604::1730757611::1::::<><>::
+::res://addons/Todo_Manager/UI/::1731183797
+ColourPicker.tscn::PackedScene::2957809393656723737::1730757604::0::1::::<><>::res://addons/Todo_Manager/ColourPicker.gd
+Dock.tscn::PackedScene::4584442902745049483::1730757604::0::1::::<><>::res://addons/Todo_Manager/Dock.gd<>res://addons/Todo_Manager/Project.gd<>res://addons/Todo_Manager/Current.gd
+Pattern.tscn::PackedScene::4056048923411208166::1730757604::0::1::::<><>::res://addons/Todo_Manager/Pattern.gd
+::res://Entity/::1731185691
+::res://Entity/Camera/::1731185691
+::res://Entity/Player/::1731185665
+Player.gd::GDScript::-1::1731172528::0::1::::<>CharacterBody2D<>::
+Player.tscn::PackedScene::5501987851632900604::1731185665::0::1::::<><>::uid://dhv21cnwh8y4b::::res://Resources/Character base.png<>res://Entity/Player/Player.gd<>res://Entity/Player/State Machine/States.gd<>res://Entity/Player/State Machine/LockedState.gd<>res://Entity/Player/State Machine/IdleState.gd<>res://Entity/Player/State Machine/RunState.gd<>res://Entity/Player/State Machine/JumpState.gd<>res://Entity/Player/State Machine/JumpPeakState.gd<>res://Entity/Player/State Machine/FallState.gd<>res://Entity/Player/State Machine/WallJumpState.gd
+RunState.gd::GDScript::-1::1730757603::0::1::::<>PlayerState<>::
+WallJumpState.gd::GDScript::-1::1730757603::0::1::::<>PlayerState<>::
+::res://Entity/Player/State Machine/::1731183797
+FallState.gd::GDScript::-1::1731172528::0::1::::<>PlayerState<>::
+IdleState.gd::GDScript::-1::1730567824::0::1::::<>PlayerState<>::
+JumpPeakState.gd::GDScript::-1::1730567824::0::1::::JumpPeak<>PlayerState<>::
+JumpState.gd::GDScript::-1::1730567824::0::1::::Jump<>PlayerState<>::
+LockedState.gd::GDScript::-1::1730567824::0::1::::<>PlayerState<>::
+PlayerState.gd::GDScript::-1::1730567824::0::1::::PlayerState<>Node<>::
+RunState.gd::GDScript::-1::1730757603::0::1::::<>PlayerState<>::
+States.gd::GDScript::-1::1730757603::0::1::::<>Node<>::
+WallJumpState.gd::GDScript::-1::1731172528::0::1::::<>PlayerState<>::
+::res://Resources/::1731183797
+bk.png::CompressedTexture2D::5822186437678744284::1730567824::1730757611::1::::<><>::
+Character base.png::CompressedTexture2D::7695621804966424115::1731172701::1731173209::1::::<><>::
+Icon.png::CompressedTexture2D::3601321560493280643::1730567824::1730757611::1::::<><>::
+Tiles 16x16.png::CompressedTexture2D::1689027477162606377::1730567824::1730757611::1::::<><>::
+TileSet.png::CompressedTexture2D::8245105786322451937::1730567824::1730757611::1::::<><>::
+::res://World/::1731185665
+Camera.gd::GDScript::-1::1731185665::0::1::::<>Camera2D<>::
+World.tscn::PackedScene::1967060548200150929::1731185707::0::1::::<><>::uid://co7ktbmdpyr1u::::res://Resources/bk.png<>uid://ycgbhmit6iof::::res://Resources/Tiles 16x16.png<>uid://ckng63detpg81::::res://Entity/Player/Player.tscn<>res://World/Camera.gd

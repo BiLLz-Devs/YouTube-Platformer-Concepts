@@ -1,0 +1,6 @@
+res://World/World.tscn
+res://World/Camera.gd
+res://Entity/Player/Player.tscn
+res://Entity/Camera/CameraZone.tscn
+res://Entity/Camera/Camera.tscn
+res://Entity/Camera/Camera.gd
