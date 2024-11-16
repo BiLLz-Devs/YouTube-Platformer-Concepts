@@ -6,7 +6,7 @@ func EnterState():
 
 
 func ExitState():
-	pass #Player.SetSquish(1.30, 0.9)
+	Player.SetSquish(1.10, 0.9)
 
 
 func Update(delta: float):

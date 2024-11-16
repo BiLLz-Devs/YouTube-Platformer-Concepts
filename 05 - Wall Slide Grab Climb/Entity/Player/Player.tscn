@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://ckng63detpg81"]
+[gd_scene load_steps=26 format=3 uid="uid://ckng63detpg81"]
 
 [ext_resource type="Texture2D" uid="uid://dhv21cnwh8y4b" path="res://Resources/Character base.png" id="1_e7d54"]
 [ext_resource type="Script" path="res://Entity/Player/Player.gd" id="1_gqhxu"]
@@ -13,23 +13,6 @@
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallGrabState.gd" id="11_2klq3"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallClimbState.gd" id="12_bexp8"]
 [ext_resource type="Script" path="res://Entity/Player/State Machine/WallSlideState.gd" id="13_uqlse"]
-[ext_resource type="Script" path="res://Entity/Player/State Machine/DashState.gd" id="14_2n0fv"]
-
-[sub_resource type="Animation" id="Animation_7ahmx"]
-resource_name = "Dash"
-step = 0.025
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [88]
-}
 
 [sub_resource type="Animation" id="Animation_5ksb1"]
 resource_name = "Fall"
@@ -202,7 +185,6 @@ tracks/0/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_7w2do"]
 _data = {
-"Dash": SubResource("Animation_7ahmx"),
 "Fall": SubResource("Animation_5ksb1"),
 "Idle": SubResource("Animation_vog66"),
 "Jump": SubResource("Animation_3p2k2"),
@@ -218,21 +200,13 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7phbn"]
 size = Vector2(8, 20)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_jct8j"]
-atlas = ExtResource("1_e7d54")
-region = Rect2(0, 352, 32, 32)
-
-[sub_resource type="Gradient" id="Gradient_mk772"]
-colors = PackedColorArray(1, 1, 1, 0.709804, 1, 0, 0, 0)
-
 [node name="Player" type="CharacterBody2D"]
-position = Vector2(0, -6)
 script = ExtResource("1_gqhxu")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_e7d54")
 hframes = 8
-vframes = 12
+vframes = 11
 
 [node name="Animator" type="AnimationPlayer" parent="."]
 libraries = {
@@ -287,20 +261,11 @@ script = ExtResource("12_bexp8")
 [node name="WallSlide" type="Node" parent="StateMachine"]
 script = ExtResource("13_uqlse")
 
-[node name="Dash" type="Node" parent="StateMachine"]
-script = ExtResource("14_2n0fv")
-
 [node name="Timers" type="Node" parent="."]
 
 [node name="CoyoteTime" type="Timer" parent="Timers"]
 
 [node name="JumpBuffer" type="Timer" parent="Timers"]
-
-[node name="DashTimer" type="Timer" parent="Timers"]
-one_shot = true
-
-[node name="DashBuffer" type="Timer" parent="Timers"]
-one_shot = true
 
 [node name="Raycasts" type="Node2D" parent="."]
 
@@ -339,16 +304,3 @@ target_position = Vector2(4, 0)
 [node name="LowerLeft" type="RayCast2D" parent="Raycasts/WallClimb"]
 position = Vector2(-3.01, 13)
 target_position = Vector2(-4, 0)
-
-[node name="GraphcisEffects" type="Node2D" parent="."]
-
-[node name="Dash" type="Node2D" parent="GraphcisEffects"]
-
-[node name="DashTrail" type="CPUParticles2D" parent="GraphcisEffects/Dash"]
-emitting = false
-amount = 4
-one_shot = true
-speed_scale = 3.0
-texture = SubResource("AtlasTexture_jct8j")
-gravity = Vector2(0, 0)
-color_ramp = SubResource("Gradient_mk772")
