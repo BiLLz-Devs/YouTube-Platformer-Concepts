@@ -2,68 +2,62 @@ extends CharacterBody2D
 
 #region Player Variables
 
-#region Nodes
 # Nodes
 @onready var Sprite = $Sprite
 @onready var Animator = $Animator
 @onready var Collider = $Collider
 @onready var States = $StateMachine
-
 @onready var CoyoteTimer = $Timers/CoyoteTime
 @onready var JumpBufferTimer = $Timers/JumpBuffer
 
-@onready var RCBottomLeft = $Raycasts/WallJump/BottomLeft
-@onready var RCBottomRight = $Raycasts/WallJump/BottomRight
-@onready var RCTopRight = $Raycasts/WallClimb/TopRight
-@onready var RCTopLeft = $Raycasts/WallClimb/TopLeft
-@onready var RCUpperLeft = $Raycasts/WallClimb/UpperLeft
-@onready var RCUpperRight = $Raycasts/WallClimb/UpperRight
-@onready var RCLowerLeft = $Raycasts/WallClimb/LowerLeft
-@onready var RCLowerRight = $Raycasts/WallClimb/LowerRight
+@onready var RCWallKickLeft = $Raycasts/WallJump/WallKickLeft
+@onready var RCWallKickRight = $Raycasts/WallJump/WallKickRight
+@onready var RCWallClimbRight = $Raycasts/WallClimb/WallClimbTopRight
+@onready var RCWallClimbLeft = $Raycasts/WallClimb/WallClimbTopLeft
+@onready var RCWallClimbLimitTopLeft = $Raycasts/WallClimb/WallClimbLimitTopLeft
+@onready var RCWallClimbLimitTopRight = $Raycasts/WallClimb/WallClimbLimitTopRight
+@onready var RCWallClimbLimitBottomLeft = $Raycasts/WallClimb/WallClimbLimitBottomLeft
+@onready var RCWallClimbLimitBottomRight = $Raycasts/WallClimb/WallClimbLimitBottomRight
 
-#endregion
-
-#region Physics Variables
-# Physics Constants
+# Physics Variables
 const RunSpeed = 120
-const WallJumpHSpeed = 120
-const GroundAcceleration = 20
-const GroundDeceleration = 25
+const GroundAcceleration = 40
+const GroundDeceleration = 50
 const AirAcceleration = 15
 const AirDeceleration = 20
-const WallKickAcceleration = 4
-const WallJumpAcceleration = 5
-const WallJumpYSpeedPeak = 0 # y speed at which wall jumping gives control back to the player
+
 const GravityJump = 600
 const GravityFall = 700
-const MaxFallVelocity = 300
+const MaxFallVelocity = 700
 const JumpVelocity = -240
-const WallJumpVelocity = -190
 const VariableJumpMultiplier = 0.5
 const MaxJumps = 1
 const CoyoteTime = 0.1 # 6 Frames: FPS / (desired frames) = Time in seconds
 const JumpBufferTime = 0.15  # 9 Frames: FPS / (desired frames) = Time in seconds
+
+const WallKickAcceleration = 4
+const WallKickDeceleration = 5
+const WallJumpYSpeedPeak = 0 # Y-speed at which the wall jump will end and change to fall state
+const WallJumpVelocity = -190
+const WallJumpHSpeed = 120
+
+const WallSlideSpeed = 40
 const ClimbSpeed = 30
-const MaxClimbStamina = 300 #stamina measured by frames and not with a timer as certain activites use stamina at different rate
+const MaxClimbStamina = 300 # Measured in ticks not seconds as it can decrease at various rates
 const GrabStaminaCost = 1
 const ClimbStaminaCost = 2
-const WallSlideSpeed = 40
 
-# Physics Variables
 var moveSpeed = RunSpeed
 var Acceleration = GroundAcceleration
 var Deceleration = GroundDeceleration
 var jumpSpeed = JumpVelocity
 var moveDirectionX = 0
 var jumps = 0
-var wallDirection: Vector2 = Vector2.ZERO
-var wallClimbDirection: Vector2 = Vector2.ZERO
+var wallDirection = Vector2.ZERO
+var wallClimbDirection = Vector2.ZERO
 var climbStamina = MaxClimbStamina
 var facing = 1
 
-#endregion
-
-#region Input
 # Input Variables
 var keyUp = false
 var keyDown = false
@@ -72,13 +66,10 @@ var keyRight = false
 var keyJump = false
 var keyJumpPressed = false
 var keyClimb = false
-#endregion
 
-#region State Machine
 # State Machine
 var currentState = null
 var previousState = null
-#endregion
 
 #endregion
 
@@ -104,6 +95,7 @@ func _draw():
 func _physics_process(delta: float) -> void:
 	# Get input states
 	GetInputStates()
+	
 	# Update the current state
 	currentState.Update(delta)
 	HandleMaxFallVelocity()
@@ -114,7 +106,7 @@ func _physics_process(delta: float) -> void:
 #endregion
 
 
-#region Player Physics Functions
+#region Player Functions
 
 
 func HorizontalMovement(acceleration: float = Acceleration, deceleration: float = Deceleration):
@@ -138,7 +130,7 @@ func HandleMaxFallVelocity():
 
 
 func HandleJumpBuffer():
-	if (keyJumpPressed and (CoyoteTimer.time_left <= 0)):
+	if (keyJumpPressed):
 		JumpBufferTimer.start(JumpBufferTime)
 
 
@@ -150,10 +142,8 @@ func HandleJump():
 	# Handle jump
 	if (is_on_floor()):
 		if (jumps < MaxJumps):
-			if (keyJumpPressed):
+			if (keyJumpPressed or JumpBufferTimer.time_left > 0):
 				jumps += 1
-				ChangeState(States.Jump)
-			if (JumpBufferTimer.time_left > 0):
 				JumpBufferTimer.stop()
 				ChangeState(States.Jump)
 	else:
@@ -170,12 +160,6 @@ func HandleJump():
 				ChangeState(States.Jump)
 
 
-func HandleWallJump():
-	GetCanWallClimb()
-	if ((keyJumpPressed or (JumpBufferTimer.time_left > 0)) and wallDirection.x != 0):
-		ChangeState(States.WallJump)
-
-
 func HandleLanding():
 	if (is_on_floor()):
 		jumps = 0
@@ -183,43 +167,44 @@ func HandleLanding():
 		ChangeState(States.Idle)
 
 
+func HandleWallJump():
+	GetWallDirection()
+	if ((keyJumpPressed or (JumpBufferTimer.time_left > 0)) and (wallDirection != Vector2.ZERO)):
+		ChangeState(States.WallJump)
+
+
+func HandleWallSlide():
+	if (((wallDirection == Vector2.LEFT and keyLeft) and (RCWallClimbLeft.is_colliding() and RCWallKickLeft.is_colliding()))
+		or ((wallDirection == Vector2.RIGHT and keyRight) and (RCWallClimbRight.is_colliding() and RCWallKickRight.is_colliding()))):
+			if (!keyJump):
+				ChangeState(States.WallSlide)
+
+
 func HandleWallGrab():
+	GetCanWallClimb()
 	if (wallClimbDirection != Vector2.ZERO):
 		if (keyClimb and (climbStamina > 0)):
 			ChangeState(States.WallGrab)
 
 
 func HandleWallRelease():
-	if (!keyClimb):
-		ChangeState(States.Fall)
-	elif (climbStamina <= 0):
+	if (!keyClimb or (climbStamina <= 0)):
 		ChangeState(States.Fall)
 
-
-func HandleWallSlide():
-	if (((wallDirection == Vector2.LEFT and keyLeft) and (RCUpperLeft.is_colliding() and RCLowerLeft.is_colliding()))
-		or ((wallDirection == Vector2.RIGHT and keyRight) and (RCUpperRight.is_colliding() and RCLowerRight.is_colliding()))):
-		if (!keyJump):
-			ChangeState(States.WallSlide)
-
-#endregion
-
-
-#region Player Utility Functions
 
 func GetWallDirection():
-	if (RCBottomLeft.is_colliding()):
-		wallDirection = Vector2.LEFT
-	elif (RCBottomRight.is_colliding()):
+	if (RCWallKickRight.is_colliding()):
 		wallDirection = Vector2.RIGHT
+	elif (RCWallKickLeft.is_colliding()):
+		wallDirection = Vector2.LEFT
 	else:
 		wallDirection = Vector2.ZERO
 
 
 func GetCanWallClimb():
-	if (RCBottomLeft.is_colliding() and RCTopLeft.is_colliding()):
+	if (RCWallKickLeft.is_colliding() and RCWallClimbLeft.is_colliding()):
 		wallClimbDirection = Vector2.LEFT
-	elif (RCBottomRight.is_colliding() and RCTopRight.is_colliding()):
+	elif (RCWallKickRight.is_colliding() and RCWallClimbRight.is_colliding()):
 		wallClimbDirection = Vector2.RIGHT
 	else:
 		wallClimbDirection = Vector2.ZERO
@@ -249,11 +234,9 @@ func ChangeState(nextState):
 		print("From: " + previousState.Name + " To: " + currentState.Name)
 		return
 
-#endregion
-
-#region Player Graphics Functions
 
 func HandleFlipH():
 	Sprite.flip_h = (facing < 1)
+
 
 #endregion

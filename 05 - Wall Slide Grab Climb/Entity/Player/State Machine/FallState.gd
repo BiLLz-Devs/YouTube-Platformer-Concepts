@@ -11,7 +11,6 @@ func ExitState():
 
 func Update(delta: float):
 	# Handle state physics
-	Player.GetCanWallClimb()
 	Player.HandleGravity(delta, Player.GravityFall)
 	Player.HorizontalMovement(Player.AirAcceleration, Player.AirDeceleration)
 	Player.HandleLanding()

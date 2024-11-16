@@ -1,6 +1,5 @@
 extends PlayerState
 
-
 func EnterState():
 	Name = "WallClimb"
 
@@ -25,12 +24,14 @@ func Update(delta):
 func HandleClimbMovement():
 	if (Player.keyClimb):
 		if (Player.wallClimbDirection != Vector2.ZERO):
-			if (Player.keyUp and (Player.RCUpperLeft.is_colliding() or Player.RCUpperRight.is_colliding())):
+			if (Player.keyUp and (Player.RCWallClimbLimitTopLeft.is_colliding() or Player.RCWallClimbLimitTopRight.is_colliding())):
 				Player.velocity.y = -Player.ClimbSpeed
-			elif (Player.keyDown and (Player.RCLowerLeft.is_colliding() or Player.RCLowerRight.is_colliding())):
+			elif (Player.keyDown and (Player.RCWallClimbLimitBottomLeft.is_colliding() or Player.RCWallClimbLimitBottomRight.is_colliding())):
 				Player.velocity.y = Player.ClimbSpeed
 			else:
 				Player.ChangeState(States.WallGrab)
+		else:
+			Player.ChangeState(States.Fall)
 	else:
 		Player.ChangeState(States.Fall)
 
