@@ -171,7 +171,7 @@ func HandleJump():
 
 
 func HandleWallJump():
-	GetWallDirection()
+	GetCanWallClimb()
 	if ((keyJumpPressed or (JumpBufferTimer.time_left > 0)) and wallDirection.x != 0):
 		ChangeState(States.WallJump)
 
