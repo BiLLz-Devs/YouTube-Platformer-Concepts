@@ -23,7 +23,7 @@ extends CharacterBody2D
 @onready var RCLowerLeft = $Raycasts/WallClimb/LowerLeft
 @onready var RCLowerRight = $Raycasts/WallClimb/LowerRight
 
-@onready var DashGhost = $GraphcisEffects/Dash/DashTrail
+@onready var DashParticles = $GraphcisEffects/Dash/DashTrail
 
 #endregion
 

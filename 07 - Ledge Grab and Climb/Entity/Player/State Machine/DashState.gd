@@ -8,7 +8,7 @@ func EnterState():
 	# Set the label
 	Name = "Dash"
 	Player.dashDirection = Player.GetDashDirection()
-	Player.DashGhost.restart()
+	Player.DashParticles.restart()
 	Player.velocity = Player.dashDirection.normalized() * Player.DashSpeed
 	Player.DashTimer.start(Player.DashTime)
 	Player.SetSquish(abs(Player.dashDirection.y * DashSquish), abs(Player.dashDirection.x * DashSquish), 0.05)
@@ -37,6 +37,5 @@ func HandleDashEnd():
 
 
 func HandleAnimations():
-	Player.HandleWallGrab()
 	Player.Animator.play("Dash")
 	Player.HandleFlipH()

@@ -1,0 +1,79 @@
+[gd_scene load_steps=8 format=3 uid="uid://rwfkwwb60io2"]
+
+[ext_resource type="Shader" path="res://Entity/Player/Distortion.gdshader" id="1_ofmqw"]
+[ext_resource type="Script" path="res://Entity/Player/DashDistortion.gd" id="1_pum7m"]
+[ext_resource type="Texture2D" uid="uid://brkrifmwxbdux" path="res://Resources/Icon.png" id="2_gf6l2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_48p8h"]
+shader = ExtResource("1_ofmqw")
+shader_parameter/strength = 0.1
+shader_parameter/radius = 0.0
+shader_parameter/aberration = 0.5
+shader_parameter/width = 0.01
+shader_parameter/feather = 0.2
+
+[sub_resource type="Animation" id="Animation_dyc5a"]
+resource_name = "Distort"
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.4]
+}
+
+[sub_resource type="Animation" id="Animation_alq5j"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:material:shader_parameter/radius")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ve4r6"]
+_data = {
+"Distort": SubResource("Animation_dyc5a"),
+"RESET": SubResource("Animation_alq5j")
+}
+
+[node name="DashDistortion" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_pum7m")
+
+[node name="Test" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_left = -95.0
+offset_top = -95.0
+offset_right = 96.0
+offset_bottom = 96.0
+texture = ExtResource("2_gf6l2")
+expand_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_48p8h")
+layout_mode = 0
+offset_left = -96.0
+offset_top = -96.0
+offset_right = 96.0
+offset_bottom = 96.0
+metadata/_edit_lock_ = true
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_ve4r6")
+}
