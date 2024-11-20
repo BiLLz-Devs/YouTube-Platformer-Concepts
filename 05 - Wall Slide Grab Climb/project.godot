@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="YouTube-Platformer-Version-05-WallClimb"
+config/name="YouTube-Platformer-Version-05-Advanced-Wall-Mechanics"
 run/main_scene="res://World/World.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 run/max_fps=60
@@ -24,10 +24,6 @@ window/size/always_on_top=true
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
-
-[editor_plugins]
-
-enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")
 
 [input]
 
