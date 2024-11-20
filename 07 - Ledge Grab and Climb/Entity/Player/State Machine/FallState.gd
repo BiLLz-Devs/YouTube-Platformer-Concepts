@@ -21,6 +21,7 @@ func Update(delta: float):
 	Player.HandleWallSlide()
 	Player.HandleWallGrab()
 	Player.HandleDash()
+	Player.HandleLedgeGrab()
 	HandleAnimations()
 
 

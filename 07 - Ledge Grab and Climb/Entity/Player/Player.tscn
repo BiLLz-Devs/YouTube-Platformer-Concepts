@@ -216,7 +216,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7phbn"]
-size = Vector2(8, 20)
+size = Vector2(8, 23)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_jct8j"]
 atlas = ExtResource("1_e7d54")
@@ -240,7 +240,7 @@ libraries = {
 }
 
 [node name="Collider" type="CollisionShape2D" parent="."]
-position = Vector2(0, 6)
+position = Vector2(0, 4.5)
 shape = SubResource("RectangleShape2D_7phbn")
 
 [node name="Camera" type="Camera2D" parent="."]
@@ -343,12 +343,20 @@ target_position = Vector2(-4, 0)
 [node name="LedgeGrab" type="Node2D" parent="Raycasts"]
 
 [node name="LedgeRightLower" type="RayCast2D" parent="Raycasts/LedgeGrab"]
+position = Vector2(3, -5)
+target_position = Vector2(8, 0)
 
 [node name="LedgeRightUpper" type="RayCast2D" parent="Raycasts/LedgeGrab"]
+position = Vector2(3, -7)
+target_position = Vector2(12, 0)
 
 [node name="LedgeLeftLower" type="RayCast2D" parent="Raycasts/LedgeGrab"]
+position = Vector2(-3, -5)
+target_position = Vector2(-8, 0)
 
 [node name="LedgeLeftUpper" type="RayCast2D" parent="Raycasts/LedgeGrab"]
+position = Vector2(-3, -7)
+target_position = Vector2(-12, 0)
 
 [node name="GraphcisEffects" type="Node2D" parent="."]
 

@@ -14,6 +14,7 @@ extends CharacterBody2D
 @onready var DashTimer = $Timers/DashTimer
 @onready var DashBuffer = $Timers/DashBuffer
 
+@onready var Raycasts = $Raycasts
 @onready var RCBottomLeft = $Raycasts/WallJump/BottomLeft
 @onready var RCBottomRight = $Raycasts/WallJump/BottomRight
 @onready var RCTopRight = $Raycasts/WallClimb/TopRight
@@ -22,6 +23,12 @@ extends CharacterBody2D
 @onready var RCUpperRight = $Raycasts/WallClimb/UpperRight
 @onready var RCLowerLeft = $Raycasts/WallClimb/LowerLeft
 @onready var RCLowerRight = $Raycasts/WallClimb/LowerRight
+
+@onready var RCLedgeRightLower = $Raycasts/LedgeGrab/LedgeRightLower
+@onready var RCLedgeRightUpper = $Raycasts/LedgeGrab/LedgeRightUpper
+@onready var RCLedgeLeftLower = $Raycasts/LedgeGrab/LedgeLeftLower
+@onready var RCLedgeLeftUpper = $Raycasts/LedgeGrab/LedgeLeftUpper
+
 
 @onready var DashParticles = $GraphcisEffects/Dash/DashTrail
 
@@ -60,6 +67,7 @@ const DashSpeed = 300
 const DashDeceleration = 4
 const DashTime = 0.15
 const DashBufferTime = 0.075 # roughly 4.5 frames of buffer time
+const DashDelayEffect = 30 # millisecond pause before dshing
 
 # Physics Variables
 var moveSpeed = RunSpeed
@@ -127,6 +135,7 @@ func _draw():
 func _physics_process(delta: float) -> void:
 	# Get input states
 	GetInputStates()
+	UpdateRaycasts()
 	# Update the current state
 	currentState.Update(delta)
 	HandleMaxFallVelocity()
@@ -246,10 +255,23 @@ func GetDashDirection() -> Vector2:
 		_dir -= Vector2(Input.get_axis("Right", "Left"), Input.get_axis("Down", "Up"))
 	return _dir
 
+
+func HandleLedgeGrab():
+	if (RCLedgeLeftLower.is_colliding() and !RCLedgeLeftUpper.is_colliding()):
+		print("LEDGE GRAB LEFT")
+	if (RCLedgeRightLower.is_colliding() and !RCLedgeRightUpper.is_colliding()):
+		print("LEDGE GRAB RIGHT")
+
 #endregion
 
 
 #region Player Utility Functions
+
+func UpdateRaycasts():
+	for child in Raycasts.get_children():
+		if child is RayCast2D:
+			child.force_raycast_update()
+
 
 func GetWallDirection():
 	if (RCBottomLeft.is_colliding()):

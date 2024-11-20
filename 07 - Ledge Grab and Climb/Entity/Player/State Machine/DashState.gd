@@ -7,6 +7,7 @@ var DistortionEffect = preload("res://Entity/Player/DashDistortion.tscn")
 func EnterState():
 	# Set the label
 	Name = "Dash"
+	OS.delay_msec(Player.DashDelayEffect)
 	Player.dashDirection = Player.GetDashDirection()
 	Player.DashParticles.restart()
 	Player.velocity = Player.dashDirection.normalized() * Player.DashSpeed
