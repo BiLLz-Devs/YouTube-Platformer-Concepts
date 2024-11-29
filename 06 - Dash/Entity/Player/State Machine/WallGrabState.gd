@@ -26,7 +26,6 @@ func Update(delta):
 	HandleClimb()
 	Player.climbStamina -= Player.GrabStaminaCost
 	Player.HandleWallJump()
-	#Player.HandleDash()
 	HandleAnimations()
 
 

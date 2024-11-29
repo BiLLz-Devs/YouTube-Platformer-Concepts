@@ -11,6 +11,7 @@ extends Node
 @onready var WallClimb = $WallClimb
 @onready var WallSlide = $WallSlide
 @onready var Dash = $Dash
+@onready var LedgeGrab = $LedgeGrab
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

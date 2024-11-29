@@ -1,14 +1,14 @@
-extends PlayerState
+class_name WallJump extends PlayerState
 
 var lastWallDirection
-var shouoldEnableWallKick
+var shouldEnableWallKick
 
 func EnterState():
 	# Set the label
 	Name = "WallJump"
 	Player.velocity.y = Player.WallJumpVelocity
-	ShouldOnlyJumpButtonWallKick(false)
 	lastWallDirection = Player.wallDirection
+	ShouldOnlyJumpButtonWallKick(false)
 
 
 func ExitState():
@@ -16,39 +16,16 @@ func ExitState():
 
 
 func Update(delta: float):
-	# Handle state physics
-	Player.GetWallDirection() # Update the wall direction to see if we hit a wall preaturely
+	Player.GetWallDirection() # For ending state if we hit a wall
 	Player.HandleGravity(delta, Player.GravityJump)
 	HandleWallKickMovement()
-	HandleWallJumpEnd(delta)
-	Player.HandleDash()
+	HandleWallJumpEnd()
 	HandleAnimations()
+	print("JUMPS: " + str(Player.jumps))
 
 
-func HandleAnimations():
-	if ((!Player.keyLeft and !Player.keyRight) and shouoldEnableWallKick):
-		Player.Animator.play("WallKick")
-		Player.Sprite.flip_h = (Player.velocity.x > 1)
-	else:
-		Player.Animator.play("WallJump")
-		Player.Sprite.flip_h = (Player.velocity.x < 1)
-
-
-# Switches states to fall once the player y velocity hits a certain value
-func HandleWallJumpEnd(delta):
-	if (Player.velocity.y >= Player.WallJumpYSpeedPeak):
-		Player.ChangeState(States.Fall)
-		
-	# Cancel if we hit another wall
-	if ((Player.wallDirection != lastWallDirection) and (Player.wallDirection != Vector2.ZERO)):
-		#Player.velocity.y = Player.WallJumpEndYVelocity
-		Player.ChangeState(States.Fall)
-
-
-# This function determines if only pressing jump results in a small kick or not
-# if true, a true wall jump only occurs if keyRIght or keyLeft is pressed as well as jump
 func ShouldOnlyJumpButtonWallKick(shouldEnable: bool):
-	shouoldEnableWallKick = shouldEnable
+	shouldEnableWallKick = shouldEnable
 	if (shouldEnable):
 		if (Player.keyLeft or Player.keyRight):
 			Player.velocity.x = Player.WallJumpHSpeed * Player.wallDirection.x * -1
@@ -61,17 +38,33 @@ func ShouldOnlyJumpButtonWallKick(shouldEnable: bool):
 		Player.velocity.x = Player.WallJumpHSpeed * Player.wallDirection.x * -1
 
 
-# When wall kicking, allows the player to move away from the wall with the moveLeft/moveRight key
 func HandleWallKickMovement():
 	if (!Player.keyLeft and !Player.keyRight):
-		Player.velocity.x = move_toward(Player.velocity.x, 0, Player.WallJumpAcceleration) # slows the player to 0
+		# No input means wall kick, so slow horizontal movement to 0 to just move away from
+		# the wall a little
+		Player.velocity.x = move_toward(Player.velocity.x, 0, Player.WallKickAcceleration)
 	else:
-		# Allow the player to move to the opposite direction of the wall at full speed
-		if ((lastWallDirection == Vector2.LEFT and Player.keyRight)):
-			Player.HorizontalMovement(Player.WallJumpAcceleration, Player.WallJumpAcceleration)
-		elif ((lastWallDirection == Vector2.RIGHT and Player.keyLeft)):
-			Player.HorizontalMovement(Player.WallJumpAcceleration, Player.WallJumpAcceleration)
-		#elif ((lastWallDirection == Vector2.LEFT and Player.keyLeft)):
-			#pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)
-		#elif ((lastWallDirection == Vector2.RIGHT and Player.keyRight)):
-			#pass#Player.velocity.x = move_toward(Player.velocity.x,  0, Player.WallJumpAcceleration)
+		# Allow the player to move to the oppoisite directin of the wall at full speed
+		if ((lastWallDirection == Vector2.LEFT) and Player.keyRight):
+			Player.HorizontalMovement(Player.WallKickAcceleration, Player.WallKickDeceleration)
+		elif ((lastWallDirection == Vector2.RIGHT) and Player.keyLeft):
+			Player.HorizontalMovement(Player.WallKickAcceleration, Player.WallKickDeceleration)
+
+
+func HandleWallJumpEnd():
+	# End if at jump peak
+	if (Player.velocity.y >= Player.WallJumpYSpeedPeak):
+		Player.ChangeState(States.Fall)
+	
+	# Cancel if we hit a wall
+	if ((Player.wallDirection != lastWallDirection) and (Player.wallDirection != Vector2.ZERO)):
+		Player.ChangeState(States.Fall)
+
+
+func HandleAnimations():
+	if ((!Player.keyLeft and !Player.keyRight) and shouldEnableWallKick):
+		Player.Animator.play("WallKick")
+		Player.Sprite.flip_h = (Player.velocity.x > 0)
+	else:
+		Player.Animator.play("WallJump")
+		Player.Sprite.flip_h = (Player.velocity.x < 0)

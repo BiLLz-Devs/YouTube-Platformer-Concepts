@@ -4,10 +4,9 @@ const WallMagnetSpeed = 50
 
 func EnterState():
 	Name = "WallSlide"
-	# Ensure the player is completely against the wall
 	if (Player.wallDirection == Vector2.LEFT):
 		Player.velocity.x = -WallMagnetSpeed
-	elif (Player.wallDirection == Vector2.RIGHT):
+	elif(Player.wallDirection == Vector2.RIGHT):
 		Player.velocity.x = WallMagnetSpeed
 
 
@@ -24,7 +23,6 @@ func Update(delta):
 	Player.HandleLanding()
 	Player.HandleWallJump()
 	HandleWallSlideMovement()
-	#Player.HandleDash()
 	HandleAnimations()
 
 
@@ -32,7 +30,7 @@ func HandleWallSlideMovement():
 	if (Player.wallClimbDirection == Vector2.ZERO):
 		Player.ChangeState(States.Fall)
 	
-	if ((Player.wallDirection == Vector2.LEFT and Player.keyLeft) or (Player.wallDirection == Vector2.RIGHT and Player.keyRight)):
+	if ((Player.wallClimbDirection == Vector2.LEFT and Player.keyLeft) or (Player.wallClimbDirection == Vector2.RIGHT and Player.keyRight)):
 		if (!Player.keyJump):
 			Player.velocity.y = Player.WallSlideSpeed
 	else:
@@ -41,4 +39,4 @@ func HandleWallSlideMovement():
 
 func HandleAnimations():
 	Player.Animator.play("WallSlide")
-	Player.Sprite.flip_h = (Player.wallDirection == Vector2.LEFT)
+	Player.Sprite.flip_h = (Player.wallClimbDirection == Vector2.LEFT)

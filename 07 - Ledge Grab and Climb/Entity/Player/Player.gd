@@ -90,11 +90,14 @@ var squishX = 1.0
 var squishY = 1.0
 var squishStep = 0.02 # how quickly to return to value
 
+var ledgeDirection: Vector2 = Vector2.ZERO
+
 #endregion
 
 #region Input
 # Input Variables
 var keyUp = false
+var keyUpPressed = false
 var keyDown = false
 var keyLeft = false
 var keyRight = false
@@ -109,6 +112,7 @@ var keyDash = false
 # State Machine
 var currentState = null
 var previousState = null
+var nextState = null
 #endregion
 
 #endregion
@@ -194,7 +198,6 @@ func HandleJump():
 		if ((jumps < MaxJumps) and (jumps > 0) and keyJumpPressed):
 			jumps += 1
 			ChangeState(States.Jump)
-		
 		# Handle coyote time jumps
 		if (CoyoteTimer.time_left > 0):
 			if ((keyJumpPressed) and (jumps < MaxJumps)):
@@ -258,9 +261,13 @@ func GetDashDirection() -> Vector2:
 
 func HandleLedgeGrab():
 	if (RCLedgeLeftLower.is_colliding() and !RCLedgeLeftUpper.is_colliding()):
-		print("LEDGE GRAB LEFT")
+		if (facing == -1):
+			velocity = Vector2.ZERO
+			ChangeState(States.LedgeGrab)
 	if (RCLedgeRightLower.is_colliding() and !RCLedgeRightUpper.is_colliding()):
-		print("LEDGE GRAB RIGHT")
+		if (facing == 1):
+			velocity = Vector2.ZERO
+			ChangeState(States.LedgeGrab)
 
 #endregion
 
@@ -271,6 +278,7 @@ func UpdateRaycasts():
 	for child in Raycasts.get_children():
 		if child is RayCast2D:
 			child.force_raycast_update()
+			#print("Updated: " + str(child))
 
 
 func GetWallDirection():
@@ -293,6 +301,7 @@ func GetCanWallClimb():
 
 func GetInputStates():
 	keyUp = Input.is_action_pressed("Up")
+	keyUpPressed = Input.is_action_just_pressed("Up")
 	keyDown = Input.is_action_pressed("Down")
 	keyLeft = Input.is_action_pressed("Left")
 	keyRight = Input.is_action_pressed("Right")
@@ -308,13 +317,15 @@ func GetInputStates():
 
 
 func ChangeState(nextState):
-	if nextState != null:
-		previousState = currentState 
-		currentState = nextState
-		previousState.ExitState()
-		currentState.EnterState()
-		#print("From: " + previousState.Name + " To: " + currentState.Name)
-		return
+	if (nextState != null):
+		if (currentState != nextState):
+			print("STATE CHANGE: " + currentState.Name + " to " + nextState.Name)
+			previousState = currentState
+			currentState.ExitState()
+			currentState = null
+			currentState = nextState
+			currentState.EnterState()
+		nextState = null
 
 #endregion
 
