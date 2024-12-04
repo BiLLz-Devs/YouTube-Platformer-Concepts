@@ -11,6 +11,9 @@ func ExitState():
 
 
 func Update(delta: float):
+	# Allow the player to jump
+	Player.jumps = 0
+	
 	# Handle the movments
 	Player.HorizontalMovement()
 	Player.HandleJump()

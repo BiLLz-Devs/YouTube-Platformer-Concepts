@@ -15,6 +15,7 @@ func Update(delta: float):
 	Player.HorizontalMovement()
 	if (Player.moveDirectionX != 0):
 		Player.ChangeState(States.Run)
+	Player.HandleDash()
 	HandleAnimations()
 
 

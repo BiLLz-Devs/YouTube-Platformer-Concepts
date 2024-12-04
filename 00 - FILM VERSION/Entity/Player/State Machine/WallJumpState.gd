@@ -20,6 +20,7 @@ func Update(delta: float):
 	Player.HandleGravity(delta, Player.GravityJump)
 	HandleWallKickMovement()
 	HandleWallJumpEnd()
+	Player.HandleDash()
 	HandleAnimations()
 	print("JUMPS: " + str(Player.jumps))
 

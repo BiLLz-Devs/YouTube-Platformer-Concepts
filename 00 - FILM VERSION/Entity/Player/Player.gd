@@ -7,8 +7,11 @@ extends CharacterBody2D
 @onready var Animator = $Animator
 @onready var Collider = $Collider
 @onready var States = $StateMachine
+
 @onready var CoyoteTimer = $Timers/CoyoteTime
 @onready var JumpBufferTimer = $Timers/JumpBuffer
+@onready var DashTimer: Timer = $Timers/DashTimer
+@onready var DashBuffer: Timer = $Timers/DashBuffer
 
 @onready var RCWallKickLeft = $Raycasts/WallJump/WallKickLeft
 @onready var RCWallKickRight = $Raycasts/WallJump/WallKickRight
@@ -18,6 +21,9 @@ extends CharacterBody2D
 @onready var RCWallClimbLimitTopRight = $Raycasts/WallClimb/WallClimbLimitTopRight
 @onready var RCWallClimbLimitBottomLeft = $Raycasts/WallClimb/WallClimbLimitBottomLeft
 @onready var RCWallClimbLimitBottomRight = $Raycasts/WallClimb/WallClimbLimitBottomRight
+
+@onready var DashGhost: = $"Graphics Effects/Dash/DashGhost"
+
 
 # Physics Variables
 const RunSpeed = 120
@@ -47,6 +53,15 @@ const MaxClimbStamina = 300 # Measured in ticks not seconds as it can decrease a
 const GrabStaminaCost = 1
 const ClimbStaminaCost = 2
 
+const MaxDashes = 1
+const DashSpeed = 300
+const DashAcceleration = 4
+const DashTime = 0.15
+const DashBufferTime = 0.075
+const DashMomentumCarry = 0.5
+const DashDelayEffect = 30
+
+# Player variables
 var moveSpeed = RunSpeed
 var Acceleration = GroundAcceleration
 var Deceleration = GroundDeceleration
@@ -56,7 +71,14 @@ var jumps = 0
 var wallDirection = Vector2.ZERO
 var wallClimbDirection = Vector2.ZERO
 var climbStamina = MaxClimbStamina
+
+var dashes = 0
+var dashDirection: Vector2
 var facing = 1
+
+var squishX = 1.0
+var squishY = 1.0
+var squishStep = 0.02
 
 # Input Variables
 var keyUp = false
@@ -66,10 +88,12 @@ var keyRight = false
 var keyJump = false
 var keyJumpPressed = false
 var keyClimb = false
+var keyDash = false
 
 # State Machine
 var currentState = null
 var previousState = null
+var nextState = null
 
 #endregion
 
@@ -101,6 +125,12 @@ func _physics_process(delta: float) -> void:
 	HandleMaxFallVelocity()
 	# Commit movement
 	move_and_slide()
+	
+	# Update squish
+	UpdateSquish()
+	
+	# Handle State Changes
+	HandleStateChange()
 
 
 #endregion
@@ -163,6 +193,7 @@ func HandleJump():
 func HandleLanding():
 	if (is_on_floor()):
 		jumps = 0
+		dashes = 0
 		climbStamina = MaxClimbStamina
 		ChangeState(States.Idle)
 
@@ -210,6 +241,25 @@ func GetCanWallClimb():
 		wallClimbDirection = Vector2.ZERO
 
 
+func HandleDash():
+	if (dashes < MaxDashes):
+		if (keyDash):
+			if (DashTimer.time_left <= 0):
+				DashTimer.start(DashBufferTime)
+				await DashTimer.timeout
+				dashes += 1
+				ChangeState(States.Dash)
+
+
+func GetDashDirection() -> Vector2:
+	var _dir = Vector2.ZERO
+	if (!keyLeft and !keyRight and !keyUp and !keyDown):
+		_dir = Vector2(facing, 0)
+	else:
+		_dir = Vector2(Input.get_axis("Left", "Right"), Input.get_axis("Up", "Down"))
+	return _dir
+
+
 func GetInputStates():
 	keyUp = Input.is_action_pressed("Up")
 	keyDown = Input.is_action_pressed("Down")
@@ -218,6 +268,7 @@ func GetInputStates():
 	keyJump = Input.is_action_pressed("Jump")
 	keyJumpPressed = Input.is_action_just_pressed("Jump")
 	keyClimb = Input.is_action_pressed("Climb")
+	keyDash = Input.is_action_just_pressed("Dash")
 	
 	if (keyLeft): facing = -1
 	if (keyRight): facing = 1
@@ -225,14 +276,34 @@ func GetInputStates():
 	Sprite.flip_h = (facing < 0)
 
 
-func ChangeState(nextState):
-	if nextState != null:
-		previousState = currentState 
-		currentState = nextState
-		previousState.ExitState()
-		currentState.EnterState()
-		print("From: " + previousState.Name + " To: " + currentState.Name)
-		return
+func ChangeState(targetState):
+	if (targetState):
+		nextState = targetState
+
+
+func HandleStateChange():
+	if (nextState != null):
+		if (currentState != nextState):
+			previousState = currentState
+			currentState.ExitState()
+			currentState = null
+			currentState = nextState
+			currentState.EnterState()
+		nextState = null
+
+
+func UpdateSquish():
+	Sprite.scale.x = squishX
+	Sprite.scale.y = squishY
+	
+	if (squishX != 1.0): squishX = move_toward(squishX, 1.0, squishStep)
+	if (squishY != 1.0): squishY = move_toward(squishY, 1.0, squishStep)
+
+
+func SetSquish(_squishX: float = 1.0, _squishY: float = 1.0, _step: float = squishStep):
+	squishX = _squishX if (_squishX != 0) else 1.0
+	squishX = _squishX if (_squishX != 0) else 1.0
+	squishStep = _step if (_step != 0) else squishStep
 
 
 func HandleFlipH():
