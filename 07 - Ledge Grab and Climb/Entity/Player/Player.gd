@@ -29,8 +29,11 @@ extends CharacterBody2D
 @onready var RCLedgeLeftLower = $Raycasts/LedgeGrab/LedgeLeftLower
 @onready var RCLedgeLeftUpper = $Raycasts/LedgeGrab/LedgeLeftUpper
 
-
 @onready var DashParticles = $GraphcisEffects/Dash/DashTrail
+
+# Used to get the tilemap for layer snapping
+# Alternatively we can use get_tree().root.get_node("Tiles")
+@export var CollisionMap: TileMapLayer
 
 #endregion
 
@@ -319,12 +322,12 @@ func GetInputStates():
 func ChangeState(nextState):
 	if (nextState != null):
 		if (currentState != nextState):
-			print("STATE CHANGE: " + currentState.Name + " to " + nextState.Name)
 			previousState = currentState
 			currentState.ExitState()
 			currentState = null
 			currentState = nextState
 			currentState.EnterState()
+			print("STATE CHANGE: " + previousState.Name + " to " + currentState.Name)
 		nextState = null
 
 #endregion

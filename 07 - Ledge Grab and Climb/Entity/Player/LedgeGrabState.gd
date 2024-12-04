@@ -2,6 +2,8 @@ extends PlayerState
 
 const ledgeReleaseXNudge = 1
 const ledgeReleaseYNudge = 5
+var ledgeGrabFinalPosiion = Vector2.ZERO
+var ledgeGrabSnapPosition = Vector2.ZERO
 
 var climbingUp = false
 
@@ -12,6 +14,8 @@ func EnterState():
 		Player.ledgeDirection = Vector2.LEFT
 	elif (Player.RCLedgeRightLower.is_colliding()):
 		Player.ledgeDirection = Vector2.RIGHT
+	
+	ledgeGrabFinalPosiion = Vector2(10 * Player.ledgeDirection.x, -14)
 
 
 func ExitState():
@@ -54,7 +58,7 @@ func HandleAnimations():
 
 func _on_animator_animation_finished(anim_name: StringName) -> void:
 	if (anim_name == "LedgeClimb"):
-		Player.global_position += Vector2(10 * Player.ledgeDirection.x, -14)
+		Player.global_position += ledgeGrabFinalPosiion
 		#Player.global_position += Vector2(ledgeReleaseXNudge * Player.ledgeDirection.x * -1, ledgeReleaseYNudge)
 		climbingUp = false
-		Player.ChangeState(States.Fall)
+		Player.ChangeState(States.Idle)
