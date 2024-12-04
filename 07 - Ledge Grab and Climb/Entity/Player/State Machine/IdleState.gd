@@ -11,8 +11,8 @@ func ExitState():
 
 func Update(delta: float):
 	Player.HandleFalling()
-	Player.HandleJump()
 	Player.HorizontalMovement()
+	Player.HandleJump()
 	Player.HandleDash()
 	if (Player.moveDirectionX != 0):
 		Player.ChangeState(States.Run)

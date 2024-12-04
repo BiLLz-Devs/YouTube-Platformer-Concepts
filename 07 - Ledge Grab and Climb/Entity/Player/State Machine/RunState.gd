@@ -12,9 +12,9 @@ func ExitState():
 
 func Update(delta: float):
 	# Handle the movments
+	Player.HandleFalling()
 	Player.HorizontalMovement()
 	Player.HandleJump()
-	Player.HandleFalling()
 	Player.HandleDash()
 	HandleAnimations()
 	HandleIdle()
