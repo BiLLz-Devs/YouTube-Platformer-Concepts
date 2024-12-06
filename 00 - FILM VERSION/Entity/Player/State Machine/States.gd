@@ -11,6 +11,9 @@ extends Node
 @onready var WallGrab = $WallGrab
 @onready var WallClimb = $WallClimb
 @onready var Dash = $Dash
+@onready var LedgeGrab = $LedgeGrab
+@onready var LedgeClimb = $LedgeClimb
+
 
 
 # Called when the node enters the scene tree for the first time.

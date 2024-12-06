@@ -13,6 +13,7 @@ extends CharacterBody2D
 @onready var DashTimer: Timer = $Timers/DashTimer
 @onready var DashBuffer: Timer = $Timers/DashBuffer
 
+@onready var Raycasts = $Raycasts
 @onready var RCWallKickLeft = $Raycasts/WallJump/WallKickLeft
 @onready var RCWallKickRight = $Raycasts/WallJump/WallKickRight
 @onready var RCWallClimbRight = $Raycasts/WallClimb/WallClimbTopRight
@@ -22,8 +23,15 @@ extends CharacterBody2D
 @onready var RCWallClimbLimitBottomLeft = $Raycasts/WallClimb/WallClimbLimitBottomLeft
 @onready var RCWallClimbLimitBottomRight = $Raycasts/WallClimb/WallClimbLimitBottomRight
 
+@onready var RCLedgeRightLower = $Raycasts/LedgeGrab/LedgeRightLower
+@onready var RCLedgeRightUpper = $Raycasts/LedgeGrab/LedgeRightUpper
+@onready var RCLedgeLeftLower = $Raycasts/LedgeGrab/LedgeLeftLower
+@onready var RCLedgeLeftUpper = $Raycasts/LedgeGrab/LedgeLeftUpper
+
 @onready var DashGhost: = $"Graphics Effects/Dash/DashGhost"
 
+# Used to get the tilemap layer for ledge snapping
+@export var CollisionMap: TileMapLayer
 
 # Physics Variables
 const RunSpeed = 120
@@ -72,6 +80,8 @@ var wallDirection = Vector2.ZERO
 var wallClimbDirection = Vector2.ZERO
 var climbStamina = MaxClimbStamina
 
+var ledgeDirection: Vector2 = Vector2.ZERO
+
 var dashes = 0
 var dashDirection: Vector2
 var facing = 1
@@ -82,6 +92,7 @@ var squishStep = 0.02
 
 # Input Variables
 var keyUp = false
+var keyUpPressed = false
 var keyDown = false
 var keyLeft = false
 var keyRight = false
@@ -119,6 +130,7 @@ func _draw():
 func _physics_process(delta: float) -> void:
 	# Get input states
 	GetInputStates()
+	UpdateRaycasts()
 	
 	# Update the current state
 	currentState.Update(delta)
@@ -128,9 +140,6 @@ func _physics_process(delta: float) -> void:
 	
 	# Update squish
 	UpdateSquish()
-	
-	# Handle State Changes
-	HandleStateChange()
 
 
 #endregion
@@ -260,8 +269,20 @@ func GetDashDirection() -> Vector2:
 	return _dir
 
 
+func HandleLedgeGrab():
+	if (RCLedgeLeftLower.is_colliding() and !RCLedgeLeftUpper.is_colliding()):
+		if (facing == -1): # if (facing == -1 and keyClimb):
+			velocity = Vector2.ZERO
+			ChangeState(States.LedgeGrab)
+	if (RCLedgeRightLower.is_colliding() and !RCLedgeRightUpper.is_colliding()):
+		if (facing == 1): # if (facing == 1 and keyClimb):
+			velocity = Vector2.ZERO
+			ChangeState(States.LedgeGrab)
+
+
 func GetInputStates():
 	keyUp = Input.is_action_pressed("Up")
+	keyUpPressed = Input.is_action_just_pressed("Up")
 	keyDown = Input.is_action_pressed("Down")
 	keyLeft = Input.is_action_pressed("Left")
 	keyRight = Input.is_action_pressed("Right")
@@ -276,12 +297,7 @@ func GetInputStates():
 	Sprite.flip_h = (facing < 0)
 
 
-func ChangeState(targetState):
-	if (targetState):
-		nextState = targetState
-
-
-func HandleStateChange():
+func ChangeState(nextState):
 	if (nextState != null):
 		if (currentState != nextState):
 			previousState = currentState
@@ -289,7 +305,14 @@ func HandleStateChange():
 			currentState = null
 			currentState = nextState
 			currentState.EnterState()
+			#print("STATE CHANGE: " + previousState.Name + " to " + currentState.Name)
 		nextState = null
+
+
+func UpdateRaycasts():
+	for child in Raycasts.get_children():
+		if child is RayCast2D:
+			child.force_raycast_update()
 
 
 func UpdateSquish():
@@ -302,7 +325,7 @@ func UpdateSquish():
 
 func SetSquish(_squishX: float = 1.0, _squishY: float = 1.0, _step: float = squishStep):
 	squishX = _squishX if (_squishX != 0) else 1.0
-	squishX = _squishX if (_squishX != 0) else 1.0
+	squishY = _squishY if (_squishY != 0) else 1.0
 	squishStep = _step if (_step != 0) else squishStep
 
 
