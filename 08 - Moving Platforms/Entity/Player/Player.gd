@@ -250,10 +250,10 @@ func HandleWallSlide():
 	if (((wallDirection == Vector2.LEFT and keyLeft) and (RCUpperLeft.is_colliding() and RCLowerLeft.is_colliding()))
 		or ((wallDirection == Vector2.RIGHT and keyRight) and (RCUpperRight.is_colliding() and RCLowerRight.is_colliding()))):
 		if (!keyJump):
-			if ((RCUpperLeft.get_collider().get_parent() is MovingPlatform)
-				or (RCLowerLeft.get_collider().get_parent() is MovingPlatform)
-				or (RCUpperRight.get_collider().get_parent() is MovingPlatform)
-				or (RCLowerRight.get_collider().get_parent() is MovingPlatform)):
+			if (IsRayCastCollidingMovingPlatform(RCUpperLeft)
+				or IsRayCastCollidingMovingPlatform(RCLowerLeft)
+				or IsRayCastCollidingMovingPlatform(RCUpperRight)
+				or IsRayCastCollidingMovingPlatform(RCLowerRight)):
 				print("Trying to SLIDE on moving platform")
 				return
 			else:

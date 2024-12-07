@@ -7,15 +7,47 @@ class_name MovingPlatform extends Path2D
 @onready var Collider: CollisionShape2D = $AnimatableBody2D/CollisionShape2D
 @onready var Animator: AnimationPlayer = $AnimationTree
 
+
+
+@export_category("Platform")
+@export var platformTexture: Texture2D
+@export var scaleWidth: float = 1.0
+@export var scaleHeight: float = 1.0
+#@export var oneWay: bool = false
+
+@export_category("Platform Movement")
 @export var speed = .5
+
 
 var pathDirection = 1
 
 func _ready() -> void:
-	pass # Replace with function body.
+	Sprite.texture = platformTexture
+	#Body.scale = Vector2(scaleWidth, scaleHeight)
+	Sprite.scale = Vector2(scaleWidth, scaleHeight)
+	
+	ResizeColliderToSprite()
 
 
 func _process(delta: float) -> void:
 	if (Path.progress == 1):
 		pathDirection = pathDirection * -1
 	Path.progress += speed
+
+
+func ResizeColliderToSprite():
+	# Ensure the sprite has a valid texture
+	if (Sprite.texture):
+		var _spriteSize = Sprite.get_rect().size * Sprite.scale
+		print(_spriteSize)
+		# Check if the collider has a shape
+		if (Collider.shape is RectangleShape2D):
+			# Adjust the size of the RectangleShape2D
+			Collider.shape.extents = _spriteSize / 2
+		elif (Collider.shape is CircleShape2D):
+			# Adjust the radius of the CircleShape2D (if appropriate)
+			Collider.shape.radius = max(_spriteSize.x, _spriteSize.y) / 2
+		else:
+			print("Unsupported collider shape.")
+	else:
+		print("Sprite texture is missing!")
