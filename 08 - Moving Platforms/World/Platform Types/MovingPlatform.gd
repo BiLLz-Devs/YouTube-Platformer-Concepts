@@ -1,3 +1,4 @@
+#@tool
 class_name MovingPlatform extends Path2D
 
 @onready var Path: PathFollow2D = $PathFollow2D
