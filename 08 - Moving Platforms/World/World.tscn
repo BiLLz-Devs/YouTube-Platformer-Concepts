@@ -1,9 +1,10 @@
-[gd_scene load_steps=13 format=4 uid="uid://3a4g2aoliuib"]
+[gd_scene load_steps=15 format=4 uid="uid://3a4g2aoliuib"]
 
 [ext_resource type="Texture2D" uid="uid://co7ktbmdpyr1u" path="res://Assets/bk.png" id="1_kagqq"]
 [ext_resource type="Texture2D" uid="uid://ycgbhmit6iof" path="res://Assets/Tiles 16x16.png" id="2_q4hke"]
 [ext_resource type="PackedScene" uid="uid://ckng63detpg81" path="res://Entity/Player/Player.tscn" id="3_py1gi"]
 [ext_resource type="PackedScene" uid="uid://casacs5cudmdw" path="res://World/Platform Types/MovingPlatform.tscn" id="4_cnf7l"]
+[ext_resource type="Texture2D" uid="uid://0f1yge3cjxp0" path="res://World/Platform Types/BasicMovingPlatform.tres" id="4_lexyh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_voe86"]
 texture = ExtResource("2_q4hke")
@@ -117,7 +118,7 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_5vwbh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_gl80t"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -128,7 +129,7 @@ _data = {
 }
 point_count = 7
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p5c6u"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_bkocb"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -139,10 +140,16 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_e5xg2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4ixq"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
+
+[sub_resource type="Curve2D" id="Curve2D_sxcc7"]
+_data = {
+"points": PackedVector2Array(-1.19865, 0, 1.19865, 0, -16, 16, -0.299661, 32.6631, 0.299661, -32.6631, 32, -32, 23.3736, -0.599323, -23.3736, 0.599323, -16, -80, 0.299661, -26.3702, -0.299661, 26.3702, -64, -32, -20.0773, 0, 20.0773, 0, -16, 16)
+}
+point_count = 5
 
 [node name="World" type="Node2D"]
 
@@ -166,20 +173,28 @@ tile_set = SubResource("TileSet_4sgbb")
 [node name="MovingPlatform" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(160, 280)
 curve = SubResource("Curve2D_hxlmc")
-platformTexture = SubResource("AtlasTexture_5vwbh")
+platformTexture = SubResource("AtlasTexture_gl80t")
 scaleHeight = 3.0
+speed = 25.0
 
 [node name="MovingPlatform2" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
-position = Vector2(232, 136)
+position = Vector2(208, 136)
 curve = SubResource("Curve2D_60f3y")
-platformTexture = SubResource("AtlasTexture_p5c6u")
+platformTexture = SubResource("AtlasTexture_bkocb")
 scaleHeight = 0.5
+speed = 50.0
 
 [node name="MovingPlatform3" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(392, 232)
 curve = SubResource("Curve2D_122lh")
-platformTexture = SubResource("AtlasTexture_e5xg2")
-speed = 1.5
+platformTexture = SubResource("AtlasTexture_v4ixq")
+speed = 100.0
+
+[node name="MovingPlatform4" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
+position = Vector2(184, 136)
+scale = Vector2(1, 1)
+curve = SubResource("Curve2D_sxcc7")
+platformTexture = ExtResource("4_lexyh")
 
 [node name="Player" parent="." node_paths=PackedStringArray("CollisionMap") instance=ExtResource("3_py1gi")]
 position = Vector2(320, 240)
