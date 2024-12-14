@@ -45,7 +45,7 @@ func EnterState():
 			var _ledge = Vector2i(_tileCoords.x - 1, _tileCoords.y)
 			print(Player.CollisionMap.map_to_local(_ledge))
 			var _tileData = Player.CollisionMap.get_cell_tile_data(_ledge)
-			print(_tileData.get_custom_data("OneWay")):
+			print(_tileData.get_custom_data("OneWay"))
 			
 			cornerGrabPosition = Player.CollisionMap.map_to_local(_tileCoords) - _tileSizeCorrection
 			
