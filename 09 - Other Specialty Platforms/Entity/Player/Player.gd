@@ -97,6 +97,8 @@ var squishY = 1.0
 var squishStep = 0.02 # how quickly to return to value
 
 var ledgeDirection: Vector2 = Vector2.ZERO
+var cornerGrabPosition = Vector2.ZERO
+var canGrabLedge = true
 
 var movingPlatform: MovingPlatform = null # For a future video
 
@@ -280,22 +282,54 @@ func GetDashDirection() -> Vector2:
 
 
 func HandleLedgeGrab():
+	# Snap the player to the corner of the ledge
+	# Get the tile data to find the top left or top right corner global_position
+	var _tileSize = CollisionMap.tile_set.tile_size # Returns a Vector2 of the tile size
+	var _tileSizeCorrection = (_tileSize / 2) as Vector2 # Adjusts for center position of tile to give us the corner of the tile
+	var _collisionPoint # Where the raycast is colliding
+	var _tileCoords # The coordinates of the colliding tile
+	
+	# Handle a left ledge
 	if (RCLedgeLeftLower.is_colliding() and !RCLedgeLeftUpper.is_colliding()):
 		if (facing == -1):
 			if (RCLedgeLeftLower.get_collider().get_parent() is MovingPlatform):
 				print("Trying to grab left MP LEDGE!")
 				return
 			else:
-				velocity = Vector2.ZERO
-				ChangeState(States.LedgeGrab)
+				_collisionPoint = RCLedgeLeftLower.get_collision_point() # Get the colliding point
+				_tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
+				
+					# Check if this is a one way collision
+				# The following code gets the data of the ledge tile
+				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
+				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
+				if (_tileData.get_custom_data("OneWay")):
+					ChangeState(States.Fall)
+					return
+				else:
+					cornerGrabPosition = CollisionMap.map_to_local(_tileCoords) - _tileSizeCorrection
+					ChangeState(States.LedgeGrab)
+	
+	# Handle a right ledge
 	if (RCLedgeRightLower.is_colliding() and !RCLedgeRightUpper.is_colliding()):
 		if (facing == 1):
 			if (RCLedgeRightLower.get_collider().get_parent() is MovingPlatform):
 				print("Trying to grab right MP LEDGE!")
 				return
 			else:
-				velocity = Vector2.ZERO
-				ChangeState(States.LedgeGrab)
+				_collisionPoint = RCLedgeRightLower.get_collision_point() # Get the colliding point
+				_tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
+				
+				# Check if this is a one way collision
+				# The following code gets the data of the ledge tile
+				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
+				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
+				if(_tileData.get_custom_data("OneWay")):
+					ChangeState(States.Fall)
+					return
+				else:
+					cornerGrabPosition = CollisionMap.map_to_local(_tileCoords) - _tileSizeCorrection
+					ChangeState(States.LedgeGrab)
 
 #endregion
 

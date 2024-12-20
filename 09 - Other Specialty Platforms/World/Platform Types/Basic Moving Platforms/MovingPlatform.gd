@@ -10,10 +10,11 @@ class_name MovingPlatform extends Path2D
 
 
 
-@export_category("Platform")
+@export_category("Platform Properties")
 @export var platformTexture: Texture2D
 @export var scaleWidth: float = 1.0
 @export var scaleHeight: float = 1.0
+@export var oneWay: bool = false
 #@export var oneWay: bool = false
 
 @export_category("Platform Movement")
@@ -27,12 +28,14 @@ func _ready() -> void:
 	Sprite.scale = Vector2(scaleWidth, scaleHeight)
 	Path.progress = 0
 	pathProgress = 0
+	Collider.one_way_collision = oneWay
 	
 	ResizeColliderToSprite()
 
 
 func _process(delta: float) -> void:
 	# Only move the platforms in game, not the editor
+	
 	if (!Engine.is_editor_hint()):
 		pathProgress += (speed * delta)
 		Path.set_progress(pathProgress)
