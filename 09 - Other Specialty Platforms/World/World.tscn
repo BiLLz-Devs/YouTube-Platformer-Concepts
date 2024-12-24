@@ -133,7 +133,7 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_wu5bh"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_m6vw2"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -144,7 +144,7 @@ _data = {
 }
 point_count = 7
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_kk1ee"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_2opes"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -155,7 +155,7 @@ _data = {
 }
 point_count = 5
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_76fd2"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_tkt6f"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -258,14 +258,14 @@ tile_set = SubResource("TileSet_4sgbb")
 [node name="MovingPlatform" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(160, 280)
 curve = SubResource("Curve2D_hxlmc")
-platformTexture = SubResource("AtlasTexture_wu5bh")
+platformTexture = SubResource("AtlasTexture_m6vw2")
 scaleHeight = 3.0
 speed = 25.0
 
 [node name="MovingPlatform2" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(208, 136)
 curve = SubResource("Curve2D_60f3y")
-platformTexture = SubResource("AtlasTexture_kk1ee")
+platformTexture = SubResource("AtlasTexture_2opes")
 scaleHeight = 0.5
 oneWay = true
 speed = 50.0
@@ -273,9 +273,10 @@ speed = 50.0
 [node name="MovingPlatform4" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(184, 136)
 curve = SubResource("Curve2D_sxcc7")
-platformTexture = SubResource("AtlasTexture_76fd2")
+platformTexture = SubResource("AtlasTexture_tkt6f")
 
 [node name="ResettingPlatforms" type="Node2D" parent="."]
+visible = false
 
 [node name="ResettingPlatform" parent="ResettingPlatforms" node_paths=PackedStringArray("Sprite", "Animator") instance=ExtResource("4_ds7q5")]
 position = Vector2(464, 267)
@@ -297,6 +298,7 @@ texture = SubResource("AtlasTexture_r6mk2")
 vframes = 5
 
 [node name="BouncingPlatforms" type="Node2D" parent="."]
+visible = false
 
 [node name="BouncingPlatform" parent="BouncingPlatforms" instance=ExtResource("5_oao5p")]
 position = Vector2(528, 296)

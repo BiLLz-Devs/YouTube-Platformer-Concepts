@@ -357,21 +357,7 @@ func HandleLedgeGrab():
 func HandleOneWayDropThrough():
 	if (keyDown):
 		global_position += Vector2(0, 1)
-	'''
-	var _tileSize = CollisionMap.tile_set.tile_size # Returns a Vector2 of the tile size
-	var _tileSizeCorrection = (_tileSize / 2) as Vector2 # Adjusts for center position of tile to give us the corner of the tile
-	var _collisionPoint = global_position + Vector2(0, 32) # Where the raycast is colliding
-	var _tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
-	
-	# The following code gets the data of the ledge tile
-	var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
-	var _tileData = CollisionMap.get_cell_tile_data(_ledge)
-	if ((_tileData) and (_tileData.get_custom_data("OneWay"))):
-		print("Standing on OneWay")
-		return
-	else:
-		pass
-	'''
+
 
 #endregion
 
