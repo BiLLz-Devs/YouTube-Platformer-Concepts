@@ -8,27 +8,14 @@ resource_local_to_scene = true
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_68ee1"]
 resource_local_to_scene = true
 
-[node name="ResettingPlatform" type="StaticBody2D"]
+[node name="ResettingPlatform" type="StaticBody2D" node_paths=PackedStringArray("Sprite")]
 script = ExtResource("1_tj8ry")
-
-[node name="Sprite" type="Sprite2D" parent="."]
+Sprite = NodePath("")
 
 [node name="Collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_7bobt")
-
-[node name="Animator" type="AnimationPlayer" parent="."]
 
 [node name="Area" type="Area2D" parent="."]
 
 [node name="Detector" type="CollisionShape2D" parent="Area"]
 shape = SubResource("RectangleShape2D_68ee1")
-
-[node name="LifeTimer" type="Timer" parent="."]
-one_shot = true
-
-[node name="ResetTimer" type="Timer" parent="."]
-one_shot = true
-
-[connection signal="body_entered" from="Area" to="." method="_on_area_body_entered"]
-[connection signal="timeout" from="LifeTimer" to="." method="_on_life_timer_timeout"]
-[connection signal="timeout" from="ResetTimer" to="." method="_on_reset_timer_timeout"]

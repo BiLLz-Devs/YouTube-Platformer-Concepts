@@ -10,7 +10,7 @@ func EnterState():
 	elif (Player.RCLedgeRightLower.is_colliding()):
 		Player.ledgeDirection = Vector2.RIGHT
 	
-	ledgeGrabFinalPosiion = Vector2(10 * Player.ledgeDirection.x, -14)
+	ledgeGrabFinalPosiion = Vector2(10 * Player.ledgeDirection.x, -14 + Player.AdditionalLedgeClimbNudge)
 
 
 func ExitState():

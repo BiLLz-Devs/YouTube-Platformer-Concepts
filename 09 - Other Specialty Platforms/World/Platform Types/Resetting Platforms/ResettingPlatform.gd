@@ -2,22 +2,31 @@
 class_name ResettingPlatform extends StaticBody2D
 
 @onready var Collider: CollisionShape2D = $Collider
-@onready var Animator: AnimationPlayer = $Animator
-@onready var Sprite: Sprite2D = $Sprite
 @onready var Area: Area2D = $Area
 @onready var Detector: CollisionShape2D = $Area/Detector
-@onready var LifeTimer: Timer = $LifeTimer
-@onready var ResetTimer: Timer = $ResetTimer
+
 
 @export_category("Platform Properties")
-@export var platformTexture: Texture2D
 @export var scaleWidth: float = 1.0
 @export var scaleHeight: float = 1.0
 @export var oneWay: bool = false
-@export var lifetime: float = 1.0
-@export var resetTime: float = 3.0
 
-var areaHeight = 2
+@export_category("Animation Properties")
+@export var platformTexture: Texture2D
+@export var Sprite: Sprite2D
+@export var Animator: AnimationPlayer
+@export var Normal: String
+@export var Breaking: String
+@export var Broken: String
+
+enum PlatformStates {
+	Normal,
+	Breaking,
+	Broken
+}
+
+var currentState = PlatformStates.Normal
+var areaHeight = 4
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -25,24 +34,54 @@ func _ready() -> void:
 	Sprite.scale = Vector2(scaleWidth, scaleHeight)
 	Collider.one_way_collision = oneWay
 	
+	Animator.animation_finished.connect(OnAnimationFinished)
+	
 	ResizeColliderToSprite()
 	ResizeAreaToSprite()
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	pass
+	if (!Engine.is_editor_hint()):
+		match currentState:
+			PlatformStates.Breaking:
+				Animator.play(Breaking)
+			PlatformStates.Broken:
+				Collider.disabled = true
+				Animator.play(Broken)
+			_:
+				Animator.play(Normal)
+				Collider.disabled = false
+			
+		HandlePlatformTrigger()
+
+
+func OnAnimationFinished(currentAnimation: String):
+	if (currentAnimation == Breaking):
+		currentState = PlatformStates.Broken
+	elif (currentAnimation == Broken):
+		currentState = PlatformStates.Normal
+
+
+func HandlePlatformTrigger():
+	var _bodies = Area.get_overlapping_bodies()
+	for item in _bodies:
+		if (item is PlayerController):
+			if (item.is_on_floor()):
+				if (currentState == PlatformStates.Normal):
+					currentState = PlatformStates.Breaking
 
 
 func ResizeColliderToSprite():
 	# Ensure the sprite has a valid texture
 	if (Sprite.texture):
 		var _spriteSize = Sprite.get_rect().size * Sprite.scale
-		print(_spriteSize)
+		#print("Sprite Scaled: " + str(_spriteSize))
 		# Check if the collider has a shape
 		if (Collider.shape is RectangleShape2D):
 			# Adjust the size of the RectangleShape2D
-			Collider.shape.extents = _spriteSize / 2
+			Collider.shape.extents = Vector2(_spriteSize.x / 2, _spriteSize.y / 2)
+			#print("Collider: " + str(Collider.shape.extents))
 		elif (Collider.shape is CircleShape2D):
 			# Adjust the radius of the CircleShape2D (if appropriate)
 			Collider.shape.radius = max(_spriteSize.x, _spriteSize.y) / 2
@@ -56,12 +95,11 @@ func ResizeAreaToSprite():
 	# Ensure the sprite has a valid texture
 	if (Sprite.texture):
 		var _spriteSize = Sprite.get_rect().size * Sprite.scale
-		print(_spriteSize)
 		# Check if the collider has a shape
 		if (Detector.shape is RectangleShape2D):
 			# Adjust the size of the RectangleShape2D
 			Detector.shape.extents = Vector2(_spriteSize.x / 2, areaHeight)
-			Detector.position = Detector.position - Vector2(0, Collider.shape.extents.y + areaHeight)
+			Detector.position = Detector.position - Vector2(0, Collider.shape.extents.y)
 		elif (Detector.shape is CircleShape2D):
 			# Adjust the radius of the CircleShape2D (if appropriate)
 			Detector.shape.radius = max(_spriteSize.x, _spriteSize.y) / 2
@@ -69,27 +107,3 @@ func ResizeAreaToSprite():
 			print("Unsupported collider shape.")
 	else:
 		print("Sprite texture is missing!")
-
-
-func _on_area_body_entered(body: Node2D) -> void:
-	if (body is CharacterBody2D):
-		LifeTimer.start(lifetime)
-
-
-func _on_life_timer_timeout() -> void:
-	# Stop the timer
-	LifeTimer.stop()
-	
-	# Play the break animation
-	
-	#disable the collider
-	Collider.disabled = true;
-	ResetTimer.start(resetTime)
-
-
-func _on_reset_timer_timeout() -> void:
-	# Stop the timer
-	ResetTimer.stop()
-	
-	# Enable the collider
-	Collider.disabled = false

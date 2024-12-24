@@ -1,4 +1,4 @@
-extends CharacterBody2D
+class_name PlayerController extends CharacterBody2D
 
 #region Player Variables
 
@@ -99,6 +99,8 @@ var squishStep = 0.02 # how quickly to return to value
 var ledgeDirection: Vector2 = Vector2.ZERO
 var cornerGrabPosition = Vector2.ZERO
 var canGrabLedge = true
+var ResettingPlatformNudge = -8
+var AdditionalLedgeClimbNudge = 0
 
 var movingPlatform: MovingPlatform = null # For a future video
 
@@ -295,15 +297,25 @@ func HandleLedgeGrab():
 			if (RCLedgeLeftLower.get_collider().get_parent() is MovingPlatform):
 				print("Trying to grab left MP LEDGE!")
 				return
+			if (RCLedgeLeftLower.get_collider() is ResettingPlatform):
+				# Calculate the edge location
+				var _platform = RCLedgeLeftLower.get_collider()
+				var _positionalAdjustment = Vector2(_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				
+				cornerGrabPosition = _platform.global_position + _positionalAdjustment
+				AdditionalLedgeClimbNudge = ResettingPlatformNudge
+				_platform.currentState = _platform.PlatformStates.Breaking
+				
+				ChangeState(States.LedgeGrab)
 			else:
 				_collisionPoint = RCLedgeLeftLower.get_collision_point() # Get the colliding point
 				_tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
-				
-					# Check if this is a one way collision
+				AdditionalLedgeClimbNudge = 0
+				# Check if this is a one way collision
 				# The following code gets the data of the ledge tile
 				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
 				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
-				if (_tileData.get_custom_data("OneWay")):
+				if (_tileData and (_tileData.get_custom_data("OneWay") == 1)):
 					ChangeState(States.Fall)
 					return
 				else:
@@ -316,20 +328,50 @@ func HandleLedgeGrab():
 			if (RCLedgeRightLower.get_collider().get_parent() is MovingPlatform):
 				print("Trying to grab right MP LEDGE!")
 				return
+			if (RCLedgeRightLower.get_collider() is ResettingPlatform):
+				# Calculate the edge location
+				var _platform = RCLedgeRightLower.get_collider()
+				var _positionalAdjustment = Vector2(-_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				
+				cornerGrabPosition = _platform.global_position + _positionalAdjustment
+				AdditionalLedgeClimbNudge = ResettingPlatformNudge
+				_platform.currentState = _platform.PlatformStates.Breaking
+				
+				ChangeState(States.LedgeGrab)
 			else:
 				_collisionPoint = RCLedgeRightLower.get_collision_point() # Get the colliding point
 				_tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
-				
+				AdditionalLedgeClimbNudge = ResettingPlatformNudge
 				# Check if this is a one way collision
 				# The following code gets the data of the ledge tile
 				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
 				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
-				if(_tileData.get_custom_data("OneWay")):
+				if(_tileData and (_tileData.get_custom_data("OneWay") == 1)):
 					ChangeState(States.Fall)
 					return
 				else:
 					cornerGrabPosition = CollisionMap.map_to_local(_tileCoords) - _tileSizeCorrection
 					ChangeState(States.LedgeGrab)
+
+
+func HandleOneWayDropThrough():
+	if (keyDown):
+		global_position += Vector2(0, 1)
+	'''
+	var _tileSize = CollisionMap.tile_set.tile_size # Returns a Vector2 of the tile size
+	var _tileSizeCorrection = (_tileSize / 2) as Vector2 # Adjusts for center position of tile to give us the corner of the tile
+	var _collisionPoint = global_position + Vector2(0, 32) # Where the raycast is colliding
+	var _tileCoords = CollisionMap.local_to_map(_collisionPoint) # Convert to tilemap coordinates
+	
+	# The following code gets the data of the ledge tile
+	var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
+	var _tileData = CollisionMap.get_cell_tile_data(_ledge)
+	if ((_tileData) and (_tileData.get_custom_data("OneWay"))):
+		print("Standing on OneWay")
+		return
+	else:
+		pass
+	'''
 
 #endregion
 

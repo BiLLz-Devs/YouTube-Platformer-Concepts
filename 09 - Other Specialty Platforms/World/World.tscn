@@ -1,10 +1,11 @@
-[gd_scene load_steps=17 format=4 uid="uid://3a4g2aoliuib"]
+[gd_scene load_steps=21 format=4 uid="uid://3a4g2aoliuib"]
 
 [ext_resource type="Texture2D" uid="uid://co7ktbmdpyr1u" path="res://Assets/bk.png" id="1_kagqq"]
 [ext_resource type="Texture2D" uid="uid://ycgbhmit6iof" path="res://Assets/Tiles 16x16.png" id="2_q4hke"]
 [ext_resource type="PackedScene" uid="uid://ckng63detpg81" path="res://Entity/Player/Player.tscn" id="3_py1gi"]
 [ext_resource type="PackedScene" uid="uid://casacs5cudmdw" path="res://World/Platform Types/Basic Moving Platforms/MovingPlatform.tscn" id="4_cnf7l"]
 [ext_resource type="PackedScene" uid="uid://dljn46sjjlxr" path="res://World/Platform Types/Resetting Platforms/ResettingPlatform.tscn" id="4_ds7q5"]
+[ext_resource type="PackedScene" uid="uid://cshwol8vncyms" path="res://World/Platform Types/Bouncing Platform/BouncingPlatform.tscn" id="5_oao5p"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_voe86"]
 resource_name = "Basic Tiles"
@@ -92,8 +93,6 @@ texture = ExtResource("2_q4hke")
 5:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 6:5/0 = 0
 6:5/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
-2:6/0 = 0
-2:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 3:6/0 = 0
 3:6/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 4:6/0 = 0
@@ -120,6 +119,7 @@ texture = ExtResource("2_q4hke")
 0:11/0 = 0
 1:11/0 = 0
 2:11/0 = 0
+2:6/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_4sgbb"]
 physics_layer_0/collision_layer = 1
@@ -133,7 +133,7 @@ _data = {
 }
 point_count = 3
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_v1bc4"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_wu5bh"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -144,18 +144,7 @@ _data = {
 }
 point_count = 7
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_0g6ht"]
-resource_local_to_scene = true
-atlas = ExtResource("2_q4hke")
-region = Rect2(0, 192, 48, 9)
-
-[sub_resource type="Curve2D" id="Curve2D_122lh"]
-_data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, -6.10352e-05, 0, 0, 0, 0, 96, -80, 0, 0, 0, 0, 0, -6.10352e-05)
-}
-point_count = 3
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s6hi1"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_kk1ee"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
@@ -166,14 +155,86 @@ _data = {
 }
 point_count = 5
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_p7oh7"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_76fd2"]
 resource_local_to_scene = true
 atlas = ExtResource("2_q4hke")
 region = Rect2(0, 192, 48, 9)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_r6mk2"]
 atlas = ExtResource("2_q4hke")
-region = Rect2(0, 176, 48, 9)
+region = Rect2(176, 179, 48, 45)
+
+[sub_resource type="Animation" id="Animation_hx7sd"]
+resource_name = "Normal"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_gdob7"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_r2d0t"]
+resource_name = "Breaking"
+length = 3.0
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1, 2),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_6fqep"]
+resource_name = "Broken"
+length = 4.0
+step = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_yiawt"]
+_data = {
+"Breaking": SubResource("Animation_r2d0t"),
+"Broken": SubResource("Animation_6fqep"),
+"Normal": SubResource("Animation_hx7sd"),
+"RESET": SubResource("Animation_gdob7")
+}
 
 [node name="World" type="Node2D"]
 
@@ -197,39 +258,54 @@ tile_set = SubResource("TileSet_4sgbb")
 [node name="MovingPlatform" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(160, 280)
 curve = SubResource("Curve2D_hxlmc")
-platformTexture = SubResource("AtlasTexture_v1bc4")
+platformTexture = SubResource("AtlasTexture_wu5bh")
 scaleHeight = 3.0
-oneWay = false
 speed = 25.0
 
 [node name="MovingPlatform2" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(208, 136)
 curve = SubResource("Curve2D_60f3y")
-platformTexture = SubResource("AtlasTexture_0g6ht")
+platformTexture = SubResource("AtlasTexture_kk1ee")
 scaleHeight = 0.5
 oneWay = true
 speed = 50.0
 
-[node name="MovingPlatform3" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
-position = Vector2(392, 232)
-curve = SubResource("Curve2D_122lh")
-platformTexture = SubResource("AtlasTexture_s6hi1")
-oneWay = false
-speed = 100.0
-
 [node name="MovingPlatform4" parent="MovingPlatforms" instance=ExtResource("4_cnf7l")]
 position = Vector2(184, 136)
 curve = SubResource("Curve2D_sxcc7")
-platformTexture = SubResource("AtlasTexture_p7oh7")
-oneWay = false
+platformTexture = SubResource("AtlasTexture_76fd2")
 
 [node name="ResettingPlatforms" type="Node2D" parent="."]
 
-[node name="ResettingPlatform" parent="ResettingPlatforms" instance=ExtResource("4_ds7q5")]
-position = Vector2(504, 232)
+[node name="ResettingPlatform" parent="ResettingPlatforms" node_paths=PackedStringArray("Sprite", "Animator") instance=ExtResource("4_ds7q5")]
+position = Vector2(464, 267)
+oneWay = true
 platformTexture = SubResource("AtlasTexture_r6mk2")
-lifetime = null
-resetTime = null
+Sprite = NodePath("Sprite2D")
+Animator = NodePath("AnimationPlayer")
+Normal = "Normal"
+Breaking = "Breaking"
+Broken = "Broken"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="ResettingPlatforms/ResettingPlatform"]
+libraries = {
+"": SubResource("AnimationLibrary_yiawt")
+}
+
+[node name="Sprite2D" type="Sprite2D" parent="ResettingPlatforms/ResettingPlatform"]
+texture = SubResource("AtlasTexture_r6mk2")
+vframes = 5
+
+[node name="BouncingPlatforms" type="Node2D" parent="."]
+
+[node name="BouncingPlatform" parent="BouncingPlatforms" instance=ExtResource("5_oao5p")]
+position = Vector2(528, 296)
+
+[node name="BouncingPlatform2" parent="BouncingPlatforms" instance=ExtResource("5_oao5p")]
+position = Vector2(568, 184)
+
+[node name="BouncingPlatform3" parent="BouncingPlatforms" instance=ExtResource("5_oao5p")]
+position = Vector2(568, 136)
 
 [node name="Player" parent="." node_paths=PackedStringArray("CollisionMap") instance=ExtResource("3_py1gi")]
 position = Vector2(320, 240)

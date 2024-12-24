@@ -16,6 +16,7 @@ func Update(delta: float):
 	Player.HorizontalMovement()
 	Player.HandleJump()
 	Player.HandleDash()
+	Player.HandleOneWayDropThrough()
 	HandleAnimations()
 	HandleIdle()
 

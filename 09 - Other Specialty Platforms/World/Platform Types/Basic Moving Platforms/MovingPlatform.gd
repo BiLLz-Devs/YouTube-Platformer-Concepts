@@ -45,7 +45,6 @@ func ResizeColliderToSprite():
 	# Ensure the sprite has a valid texture
 	if (Sprite.texture):
 		var _spriteSize = Sprite.get_rect().size * Sprite.scale
-		print(_spriteSize)
 		# Check if the collider has a shape
 		if (Collider.shape is RectangleShape2D):
 			# Adjust the size of the RectangleShape2D
