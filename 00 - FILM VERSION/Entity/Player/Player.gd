@@ -101,7 +101,8 @@ var cornerGrabPosition: Vector2 = Vector2.ZERO
 var ResettingPlatformNudge: int = -8
 var AdditionalLedgeClimbNudge: int = 0
 
-var movingPlatform: MovingPlatform = null # For a future video
+var movingPlatform: MovingPlatform = null
+var resettingPlatform: ResettingPlatform = null
 
 #endregion
 
@@ -298,12 +299,12 @@ func HandleLedgeGrab():
 				return
 			if (RCLedgeLeftLower.get_collider() is ResettingPlatform):
 				# Calculate the edge of the platform
-				var _platform = RCLedgeLeftLower.get_collider()
-				var _positionAdjustment = Vector2(_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				resettingPlatform = RCLedgeLeftLower.get_collider()
+				var _positionAdjustment = Vector2(resettingPlatform.Collider.shape.extents.x, -resettingPlatform.Collider.shape.extents.y)
 				
-				cornerGrabPosition = _platform.global_position + _positionAdjustment
+				cornerGrabPosition = resettingPlatform.global_position + _positionAdjustment
 				AdditionalLedgeClimbNudge = ResettingPlatformNudge
-				_platform.currentState = _platform.PlatformStates.Breaking
+				resettingPlatform.currentState = resettingPlatform.PlatformStates.Breaking
 				
 				ChangeState(States.LedgeGrab)
 			else:
@@ -329,12 +330,12 @@ func HandleLedgeGrab():
 				return
 			if (RCLedgeRightLower.get_collider() is ResettingPlatform):
 				# Calculate the edge of the platform
-				var _platform = RCLedgeRightLower.get_collider()
-				var _positionAdjustment = Vector2(-_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				resettingPlatform = RCLedgeRightLower.get_collider()
+				var _positionAdjustment = Vector2(-resettingPlatform.Collider.shape.extents.x, -resettingPlatform.Collider.shape.extents.y)
 				
-				cornerGrabPosition = _platform.global_position + _positionAdjustment
+				cornerGrabPosition = resettingPlatform.global_position + _positionAdjustment
 				AdditionalLedgeClimbNudge = ResettingPlatformNudge
-				_platform.currentState = _platform.PlatformStates.Breaking
+				resettingPlatform.currentState = resettingPlatform.PlatformStates.Breaking
 				
 				ChangeState(States.LedgeGrab)
 			else:
