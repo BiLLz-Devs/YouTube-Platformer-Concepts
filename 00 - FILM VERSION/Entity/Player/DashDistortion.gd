@@ -1,6 +1,6 @@
 extends Control
 
-@onready var Animator: AnimationPlayer = $Animator
+@onready var Animator = $Animator
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:

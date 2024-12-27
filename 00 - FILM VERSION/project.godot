@@ -14,7 +14,7 @@ config/name="YouTube-Platformer-Version-00-FILM-VERSION"
 run/main_scene="res://World/World.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 run/max_fps=60
-config/icon="res://Resources/Icon.png"
+config/icon="res://Assets/Icon.png"
 
 [display]
 
@@ -24,6 +24,10 @@ window/size/always_on_top=true
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/Todo_Manager/plugin.cfg")
 
 [input]
 

@@ -1,0 +1,105 @@
+[gd_scene load_steps=10 format=3 uid="uid://ct7kkabj83poi"]
+
+[ext_resource type="Script" path="res://World/Platform Types/Bouncing Platform/BouncingPlatform.gd" id="1_0hi8s"]
+[ext_resource type="Texture2D" uid="uid://ycgbhmit6iof" path="res://Assets/Tiles 16x16.png" id="2_m72a3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f7sph"]
+resource_local_to_scene = true
+size = Vector2(16, 4)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gtb01"]
+atlas = ExtResource("2_m72a3")
+region = Rect2(48, 208, 96, 16)
+
+[sub_resource type="Animation" id="Animation_7nurv"]
+resource_name = "Normal"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_dwudh"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_g7nht"]
+resource_name = "Launch"
+length = 0.375
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.075, 0.15, 0.225, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [1, 2, 3, 4, 5]
+}
+
+[sub_resource type="Animation" id="Animation_53prc"]
+resource_name = "Recoil"
+length = 0.45
+step = 0.025
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.05, 0.1, 0.15, 0.225, 0.3, 0.375),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [4, 5, 4, 5, 4, 3, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_syxej"]
+_data = {
+"Launch": SubResource("Animation_g7nht"),
+"Normal": SubResource("Animation_7nurv"),
+"RESET": SubResource("Animation_dwudh"),
+"Recoil": SubResource("Animation_53prc")
+}
+
+[node name="BouncingPlatform" type="Area2D"]
+script = ExtResource("1_0hi8s")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, -2)
+shape = SubResource("RectangleShape2D_f7sph")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = SubResource("AtlasTexture_gtb01")
+hframes = 6
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_syxej")
+}
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="animation_finished" from="Animator" to="." method="_on_animator_animation_finished"]

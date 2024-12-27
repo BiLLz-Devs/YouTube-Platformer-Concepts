@@ -8,9 +8,8 @@ resource_local_to_scene = true
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_68ee1"]
 resource_local_to_scene = true
 
-[node name="ResettingPlatform" type="StaticBody2D" node_paths=PackedStringArray("Sprite")]
+[node name="ResettingPlatform" type="StaticBody2D"]
 script = ExtResource("1_tj8ry")
-Sprite = NodePath("")
 
 [node name="Collider" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_7bobt")

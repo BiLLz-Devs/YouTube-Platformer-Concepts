@@ -35,7 +35,8 @@ func Update(delta: float):
 
 
 func HandleLedgeRelease():
-	if (Player.keyDown or (Player.climbStamina <= 0)):
+	if (Player.keyDown or (Player.climbStamina <= 0)
+		or ((Player.resettingPlatform != null) and (Player.resettingPlatform.currentState == Player.resettingPlatform.PlatformStates.Broken))):
 		Player.global_position += Vector2(ledgeReleaseXNudge * Player.ledgeDirection.x * -1,
 			ledgeReleaseYNudge)
 		Player.ChangeState(States.Fall)

@@ -103,6 +103,7 @@ var ResettingPlatformNudge = -8
 var AdditionalLedgeClimbNudge = 0
 
 var movingPlatform: MovingPlatform = null # For a future video
+var resettingPlatform: ResettingPlatform = null # For falling when the resetting platform breaks
 
 #endregion
 
@@ -299,12 +300,12 @@ func HandleLedgeGrab():
 				return
 			if (RCLedgeLeftLower.get_collider() is ResettingPlatform):
 				# Calculate the edge location
-				var _platform = RCLedgeLeftLower.get_collider()
-				var _positionalAdjustment = Vector2(_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				resettingPlatform = RCLedgeLeftLower.get_collider()
+				var _positionalAdjustment = Vector2(resettingPlatform.Collider.shape.extents.x, -resettingPlatform.Collider.shape.extents.y)
 				
-				cornerGrabPosition = _platform.global_position + _positionalAdjustment
+				cornerGrabPosition = resettingPlatform.global_position + _positionalAdjustment
 				AdditionalLedgeClimbNudge = ResettingPlatformNudge
-				_platform.currentState = _platform.PlatformStates.Breaking
+				resettingPlatform.currentState = resettingPlatform.PlatformStates.Breaking
 				
 				ChangeState(States.LedgeGrab)
 			else:
@@ -315,7 +316,7 @@ func HandleLedgeGrab():
 				# The following code gets the data of the ledge tile
 				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
 				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
-				if (_tileData and (_tileData.get_custom_data("OneWay") == 1)):
+				if (_tileData and _tileData.get_custom_data("OneWay")):
 					ChangeState(States.Fall)
 					return
 				else:
@@ -330,12 +331,12 @@ func HandleLedgeGrab():
 				return
 			if (RCLedgeRightLower.get_collider() is ResettingPlatform):
 				# Calculate the edge location
-				var _platform = RCLedgeRightLower.get_collider()
-				var _positionalAdjustment = Vector2(-_platform.Collider.shape.extents.x, -_platform.Collider.shape.extents.y)
+				resettingPlatform = RCLedgeRightLower.get_collider()
+				var _positionalAdjustment = Vector2(-resettingPlatform.Collider.shape.extents.x, -resettingPlatform.Collider.shape.extents.y)
 				
-				cornerGrabPosition = _platform.global_position + _positionalAdjustment
+				cornerGrabPosition = resettingPlatform.global_position + _positionalAdjustment
 				AdditionalLedgeClimbNudge = ResettingPlatformNudge
-				_platform.currentState = _platform.PlatformStates.Breaking
+				resettingPlatform.currentState = resettingPlatform.PlatformStates.Breaking
 				
 				ChangeState(States.LedgeGrab)
 			else:
@@ -346,7 +347,7 @@ func HandleLedgeGrab():
 				# The following code gets the data of the ledge tile
 				var _ledge = Vector2i(_tileCoords.x + facing, _tileCoords.y)
 				var _tileData = CollisionMap.get_cell_tile_data(_ledge)
-				if(_tileData and (_tileData.get_custom_data("OneWay") == 1)):
+				if(_tileData and _tileData.get_custom_data("OneWay")):
 					ChangeState(States.Fall)
 					return
 				else:

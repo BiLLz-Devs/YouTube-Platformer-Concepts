@@ -11,14 +11,12 @@ func ExitState():
 
 
 func Update(delta: float):
-	# Allow the player to jump
-	Player.jumps = 0
-	
 	# Handle the movments
+	Player.HandleFalling()
 	Player.HorizontalMovement()
 	Player.HandleJump()
-	Player.HandleFalling()
 	Player.HandleDash()
+	Player.HandleOneWayDropThrough()
 	HandleAnimations()
 	HandleIdle()
 

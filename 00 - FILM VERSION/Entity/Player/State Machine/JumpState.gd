@@ -4,6 +4,8 @@ func EnterState():
 	# Set the state label
 	Name = "Jump"
 	Player.velocity.y = Player.jumpSpeed
+	Player.SetSquish(0.85, 1.25)
+	Player.movingPlatformSpeedBonus += Player.movingPlatformSpeed
 
 
 func ExitState():
@@ -15,6 +17,7 @@ func Update(delta: float):
 	Player.HandleGravity(delta)
 	Player.HorizontalMovement()
 	Player.HandleWallJump()
+	Player.GetCanWallClimb()
 	Player.HandleWallGrab()
 	Player.HandleDash()
 	Player.HandleLedgeGrab()

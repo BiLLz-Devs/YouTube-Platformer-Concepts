@@ -6,11 +6,13 @@ func EnterState():
 
 
 func ExitState():
-	pass
+	Player.SetSquish(1.10, 0.9)
+	Player.movingPlatformSpeedBonus = Vector2.ZERO
 
 
 func Update(delta: float):
 	# Handle state physics
+	Player.GetCanWallClimb()
 	Player.HandleGravity(delta, Player.GravityFall)
 	Player.HorizontalMovement(Player.AirAcceleration, Player.AirDeceleration)
 	Player.HandleLanding()

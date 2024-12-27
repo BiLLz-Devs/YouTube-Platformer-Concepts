@@ -1,21 +1,16 @@
 extends PlayerState
 
-const LedgeFinalPosX = 10
-const LedgeFinalPosY = -14
-
-var ledgeGrabFinalPosition = Vector2.ZERO
+var ledgeGrabFinalPosiion = Vector2.ZERO
 
 func EnterState():
 	# Set the label
 	Name = "LedgeClimb"
-	
-	# Get the ledge direction
 	if (Player.RCLedgeLeftLower.is_colliding()):
 		Player.ledgeDirection = Vector2.LEFT
-	if (Player.RCLedgeRightLower.is_colliding()):
+	elif (Player.RCLedgeRightLower.is_colliding()):
 		Player.ledgeDirection = Vector2.RIGHT
 	
-	ledgeGrabFinalPosition = Vector2(LedgeFinalPosX * Player.ledgeDirection.x, LedgeFinalPosY)
+	ledgeGrabFinalPosiion = Vector2(10 * Player.ledgeDirection.x, -14)
 
 
 func ExitState():
@@ -27,6 +22,7 @@ func Update(delta: float):
 	HandleAnimations()
 
 
+# Functionality for if the player climbs from a grab
 func HandleClimbUp():
 	Player.Animator.play("LedgeClimb")
 
@@ -37,5 +33,5 @@ func HandleAnimations():
 
 func _on_animator_animation_finished(anim_name: StringName) -> void:
 	if (anim_name == "LedgeClimb"):
-		Player.global_position += ledgeGrabFinalPosition
+		Player.global_position += ledgeGrabFinalPosiion
 		Player.ChangeState(States.Idle)

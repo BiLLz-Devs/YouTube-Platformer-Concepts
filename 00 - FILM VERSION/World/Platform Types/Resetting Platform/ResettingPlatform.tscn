@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ddgmmpbddwwf1"]
+
+[ext_resource type="Script" path="res://World/Platform Types/Resetting Platform/ResettingPlatform.gd" id="1_0p2v0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_eocl3"]
+resource_local_to_scene = true
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_36f25"]
+resource_local_to_scene = true
+
+[node name="ResettingPlatform" type="StaticBody2D"]
+script = ExtResource("1_0p2v0")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_eocl3")
+
+[node name="Area" type="Area2D" parent="."]
+
+[node name="Detector" type="CollisionShape2D" parent="Area"]
+shape = SubResource("RectangleShape2D_36f25")
